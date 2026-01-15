@@ -1,0 +1,138 @@
+.text-generator {
+  padding: 4px 0;
+}
+
+.text-generator-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.option-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.option-label {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.option-input {
+  width: 70px;
+  padding: 6px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  background: #fff;
+  color: #1d1d1f;
+  font-size: 13px;
+  text-align: center;
+  font-family: "SF Mono", "Menlo", monospace;
+}
+
+.option-input:focus {
+  outline: none;
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+.option-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.option-checkbox input {
+  width: 16px;
+  height: 16px;
+  accent-color: #1d1d1f;
+  cursor: pointer;
+}
+
+.option-select {
+  padding: 6px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  background: #fff;
+  color: #1d1d1f;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.option-select:focus {
+  outline: none;
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+.text-generator-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.generate-btn,
+.copy-text-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.generate-btn {
+  background: #1d1d1f;
+  color: #fff;
+}
+
+.generate-btn:hover {
+  background: #000;
+}
+
+.generate-btn:active {
+  transform: scale(0.98);
+}
+
+.copy-text-btn {
+  background: rgba(0, 0, 0, 0.06);
+  color: #1d1d1f;
+}
+
+.copy-text-btn:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.copy-text-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.generated-text {
+  margin-top: 14px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.generated-label {
+  display: block;
+  font-size: 11px;
+  color: rgba(0, 0, 0, 0.4);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.generated-content {
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 12px;
+  color: #1d1d1f;
+  word-break: break-all;
+  line-height: 1.5;
+}
