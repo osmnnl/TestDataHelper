@@ -8,14 +8,15 @@ const LandingPage: React.FC = () => {
       <header className="landing-header">
         <div className="header-content">
           <div className="logo">
-            <img src="/icons/icon48.png" alt="Logo" />
+            <img src="icons/icon48.png" alt="Logo" />
             <span>Test Data Helper</span>
           </div>
           <nav>
             <a href="#features">Özellikler</a>
+            <a href="#data-types">Veri Tipleri</a>
             <a href="#install">Kurulum</a>
             <a
-              href="https://github.com/osmnnl/TestDataHelper"
+              href="https://github.com/osmanunal/TestDataHelper"
               target="_blank"
               rel="noreferrer"
             >
@@ -28,9 +29,10 @@ const LandingPage: React.FC = () => {
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-content">
+          <div className="hero-badge">✨ Yeni Sürüm v1.0 Yayında</div>
           <h1>
-            Test Verilerinizi <span className="highlight">Işık Hızında</span>{" "}
-            Üretin
+            Test Verilerinizi <br />
+            <span className="highlight">Işık Hızında</span> Üretin
           </h1>
           <p>
             Yazılım geliştirme ve test süreçleri için ihtiyacınız olan tüm
@@ -38,75 +40,127 @@ const LandingPage: React.FC = () => {
           </p>
           <div className="hero-actions">
             <a
-              href="https://github.com/osmnnl/TestDataHelper"
+              href="https://github.com/osmanunal/TestDataHelper"
               className="btn btn-primary"
             >
-              Ücretsiz Kurun
+              <span>Şimdi İndirin</span>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
             </a>
             <a
-              href="https://github.com/osmnnl/TestDataHelper"
+              href="https://github.com/osmanunal/TestDataHelper"
               className="btn btn-secondary"
             >
-              GitHub'da İncele
+              <span>GitHub'da İncele</span>
             </a>
           </div>
         </div>
       </section>
 
-      {/* Stats/Features Preview */}
+      {/* Features Section */}
       <section id="features" className="features-grid">
         <div className="feature-card">
           <div className="icon">🛡️</div>
           <h3>Tamamen Güvenli</h3>
-          <p>Veriler tarayıcınızda üretilir, hiçbir yere aktarılmaz.</p>
+          <p>
+            Veriler tamamen yerel olarak tarayıcınızda üretilir. Hiçbir veri
+            dışarı aktarılmaz veya kaydedilmez.
+          </p>
         </div>
         <div className="feature-card">
           <div className="icon">⚡</div>
           <h3>Işık Hızında</h3>
-          <p>Tek tıkla kopyalayın, beklemeden testlerinize devam edin.</p>
+          <p>
+            Karmaşık test verilerini saniyeler içinde üretin ve tek tıkla
+            kopyalayın. İş akışınızı asla bölmeyin.
+          </p>
         </div>
         <div className="feature-card">
           <div className="icon">🎨</div>
-          <h3>Modern Arayüz</h3>
-          <p>Shadcn UI esintili, kullanıcı dostu ve şık tasarım.</p>
+          <h3>Premium Tasarım</h3>
+          <p>
+            Shadcn UI esintili, modern ve kullanıcı dostu arayüz ile en iyi
+            kullanıcı deneyimini yaşayın.
+          </p>
         </div>
       </section>
 
-      {/* Data Types */}
-      <section className="data-types">
-        <h2>Üretilebilen Veriler</h2>
+      {/* Supported Data Types */}
+      <section id="data-types" className="data-types">
+        <h2>Kapsamlı Veri Kütüphanesi</h2>
         <div className="type-tags">
-          <span>TCKN</span>
-          <span>IBAN</span>
-          <span>Telefon</span>
-          <span>Ad Soyad</span>
-          <span>Adres</span>
-          <span>E-posta</span>
-          <span>Vergi No</span>
-          <span>SGK No</span>
-          <span>Lorem Ipsum</span>
+          <div className="type-tag">
+            <span>💳</span>
+            <span>TCKN / VKN</span>
+          </div>
+          <div className="type-tag">
+            <span>🏦</span>
+            <span>IBAN Üretici</span>
+          </div>
+          <div className="type-tag">
+            <span>📱</span>
+            <span>Telefon No</span>
+          </div>
+          <div className="type-tag">
+            <span>👤</span>
+            <span>Ad Soyad</span>
+          </div>
+          <div className="type-tag">
+            <span>📍</span>
+            <span>Rastgele Adres</span>
+          </div>
+          <div className="type-tag">
+            <span>📧</span>
+            <span>E-posta</span>
+          </div>
+          <div className="type-tag">
+            <span>📜</span>
+            <span>SGK Sicil No</span>
+          </div>
+          <div className="type-tag">
+            <span>📝</span>
+            <span>Lorem Ipsum</span>
+          </div>
         </div>
       </section>
 
-      {/* How to Install */}
+      {/* Installation */}
       <section id="install" className="install-section">
-        <h2>Nasıl Kurulur?</h2>
+        <h2>Hemen Kullanmaya Başlayın</h2>
         <div className="install-cards">
           <div className="install-card chrome">
             <h3>Chrome Web Store</h3>
-            <p>Resmi mağaza üzerinden tek tıkla kurulum (Çok yakında).</p>
+            <p>
+              Resmi mağaza üzerinden tek tıkla kurulum yaparak güncellemeleri
+              otomatik alın.
+            </p>
             <button disabled className="btn btn-muted">
-              Yakında
+              Çok Yakında
             </button>
           </div>
           <div className="install-card developer">
             <h3>Geliştirici Modu</h3>
-            <p>GitHub üzerinden indirerek hemen kullanmaya başlayın.</p>
+            <p>
+              Kaynak kodları indirerek kendi build'inizi oluşturun ve hemen
+              kullanmaya başlayın.
+            </p>
             <a
-              href="https://github.com/osmnnl/TestDataHelper"
+              href="https://github.com/osmanunal/TestDataHelper"
               className="btn btn-success"
             >
-              Talimatları Gör
+              GitHub'dan İndir
             </a>
           </div>
         </div>
@@ -114,13 +168,19 @@ const LandingPage: React.FC = () => {
 
       {/* Footer */}
       <footer className="landing-footer">
-        <p>
-          © 2026 Test Data Helper.{" "}
-          <a href="https://github.com/osmnnl" target="_blank" rel="noreferrer">
-            osmnnl
-          </a>{" "}
-          tarafından geliştirildi.
-        </p>
+        <div className="footer-content">
+          <p>
+            © 2026 Test Data Helper.{" "}
+            <a
+              href="https://github.com/osmanunal"
+              target="_blank"
+              rel="noreferrer"
+            >
+              osmanunal
+            </a>{" "}
+            tarafından tutkuyla geliştirildi.
+          </p>
+        </div>
       </footer>
     </div>
   );
