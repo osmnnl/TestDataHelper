@@ -10,7 +10,8 @@ export default defineConfig({
     outDir: "dist",
     rollupOptions: {
       input: {
-        popup: "index.html",
+        main: "index.html",
+        popup: "popup.html",
       },
     },
   },
