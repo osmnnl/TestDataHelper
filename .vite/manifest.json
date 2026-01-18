@@ -1,16 +1,20 @@
 {
   "../../../../../@crx/manifest": {
-    "file": "assets/crx-manifest.js-D-wWPepS.js",
+    "file": "assets/crx-manifest.js-CZ31Ca0e.js",
     "name": "crx-manifest.js",
     "src": "../../../../../@crx/manifest",
     "isEntry": true
+  },
+  "_address-DPxHVOKf.js": {
+    "file": "assets/address-DPxHVOKf.js",
+    "name": "address"
   },
   "_client-gBCj7ci7.js": {
     "file": "assets/client-gBCj7ci7.js",
     "name": "client"
   },
   "index.html": {
-    "file": "assets/main-WL2lieOA.js",
+    "file": "assets/main-Bzwz-gb8.js",
     "name": "main",
     "src": "index.html",
     "isEntry": true,
@@ -22,15 +26,31 @@
     ]
   },
   "popup.html": {
-    "file": "assets/popup-d83ASGe2.js",
+    "file": "assets/popup-CggRh0nc.js",
     "name": "popup",
     "src": "popup.html",
     "isEntry": true,
     "imports": [
-      "_client-gBCj7ci7.js"
+      "_client-gBCj7ci7.js",
+      "_address-DPxHVOKf.js"
     ],
     "css": [
       "assets/popup-B_PHriaE.css"
     ]
+  },
+  "src/background/service-worker.ts": {
+    "file": "assets/service-worker-BJPP_A3w.js",
+    "name": "service-worker",
+    "src": "src/background/service-worker.ts",
+    "isEntry": true,
+    "imports": [
+      "_address-DPxHVOKf.js"
+    ]
+  },
+  "src/content/content-script.ts": {
+    "file": "assets/content-script-CKo9pKgP.js",
+    "name": "content-script",
+    "src": "src/content/content-script.ts",
+    "isEntry": true
   }
 }
