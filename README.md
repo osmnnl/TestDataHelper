@@ -57,4 +57,4 @@ npm run build
 
 ## 📄 Lisans
 
-MIT License - [osmanunal](https://github.com/osmanunal)
+MIT License - [osmnnl](https://github.com/osmnnl)

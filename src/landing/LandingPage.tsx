@@ -18,7 +18,7 @@ function LandingPage() {
             <a href="#data-types">Veri Tipleri</a>
             <a href="#install">Kurulum</a>
             <a
-              href="https://github.com/osmanunal/TestDataHelper"
+              href="https://github.com/osmnnl/TestDataHelper"
               target="_blank"
               rel="noreferrer"
             >
@@ -59,7 +59,7 @@ function LandingPage() {
               </svg>
             </a>
             <a
-              href="https://github.com/osmanunal/TestDataHelper"
+              href="https://github.com/osmnnl/TestDataHelper"
               className="btn btn-secondary"
             >
               <span>GitHub'da İncele</span>
@@ -156,7 +156,7 @@ function LandingPage() {
               kullanmaya başlayın.
             </p>
             <a
-              href="https://github.com/osmanunal/TestDataHelper"
+              href="https://github.com/osmnnl/TestDataHelper"
               className="btn btn-secondary"
             >
               GitHub'dan İndir
@@ -171,11 +171,11 @@ function LandingPage() {
           <p>
             © 2026 Data Helper.{" "}
             <a
-              href="https://github.com/osmanunal"
+              href="https://github.com/osmnnl"
               target="_blank"
               rel="noreferrer"
             >
-              osmanunal
+              osmnnl
             </a>{" "}
             tarafından tutkuyla geliştirildi.
           </p>
