@@ -5,8 +5,9 @@ import manifest from "./manifest.json";
 
 // https://vite.dev/config/
 export default defineConfig(() => {
-  // Extension build uses relative paths, GitHub Pages uses absolute
-  const isExtensionBuild = process.env.BUILD_TARGET === "extension";
+  // Default build is for extension (relative paths)
+  // Only GitHub Pages build uses absolute paths
+  const isGitHubPages = process.env.BUILD_TARGET === "pages";
 
   return {
     plugins: [react(), crx({ manifest })],
@@ -16,9 +17,11 @@ export default defineConfig(() => {
         input: {
           main: "index.html",
           popup: "popup.html",
+          "service-worker": "src/background/service-worker.ts",
+          "content-script": "src/content/content-script.ts",
         },
       },
     },
-    base: isExtensionBuild ? "./" : "/TestDataHelper/",
+    base: isGitHubPages ? "/TestDataHelper/" : "./",
   };
 });

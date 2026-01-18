@@ -1,56 +1,60 @@
-# Test Data Helper 🚀
+# Data Helper 🚀
 
-> **Coming Soon to the Chrome Web Store!** 🌟
+[![Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-v1.0-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/data-helper/hboimhjgdphpokonjindjhgoihkmboli)
 
-Data Helper, yazılım geliştirme ve test süreçlerini hızlandırmak için tasarlanmış, modern ve minimalist bir Chrome uzantısıdır. Tek tıkla gerçekçi test verileri (TCKN, IBAN, SGK, E-posta vb.) üreterek iş akışınızı kesintisiz sürdürmenizi sağlar.
+Data Helper, yazılım geliştirme ve test süreçlerini hızlandırmak için tasarlanmış, modern ve minimalist bir Chrome uzantısıdır. Tek tıkla veya **sağ tık menüsü** ile gerçekçi test verileri (TCKN, IBAN, SGK, E-posta vb.) üretir.
 
-![Data Helper Banner](https://via.placeholder.com/800x400?text=Data+Helper+Premium+UI)
+## ✨ Özellikler
 
-## ✨ Neden Data Helper?
+- **🔒 %100 Güvenli**: Veriler tamamen yerel olarak tarayıcınızda üretilir
+- **🖱️ Sağ Tık Menüsü**: Herhangi bir input'a sağ tıklayın → Data Helper → istediğiniz veriyi seçin
+- **⚡️ Işık Hızında**: Tek tıkla kopyala-yapıştır kolaylığı
+- **⭐ Favoriler**: En çok kullandığınız veri tiplerini favorilerinize sabitleyin
+- **🎨 Premium UI**: Karanlık mod desteği ve modern tasarım
 
-ERP, İK ve Finans projelerinde çalışırken sürekli ihtiyaç duyulan "geçerli" test verilerini üretmek artık saniyeler sürüyor. Shadcn UI estetiği ile tasarlanan arayüzü sayesinde hem şık hem de son derece hızlı bir deneyim sunar.
+## 📦 Veri Tipleri
 
-### 🛡 Özellikler
+| 💳 Finansal     | 👤 Kişisel   | 📝 Metin     |
+| --------------- | ------------ | ------------ |
+| TC Kimlik No    | Ad Soyad     | 50 Karakter  |
+| Vergi Kimlik No | E-posta      | 100 Karakter |
+| IBAN            | Telefon      | 250 Karakter |
+| SGK Sicil No    | Doğum Tarihi | 500 Karakter |
+| SMMM Sicil No   | Tam Adres    |              |
 
-- **🔒 %100 Güvenli**: Veriler tamamen yerel olarak tarayıcınızda üretilir. Hiçbir veri dışarı aktarılmaz veya kaydedilmez.
-- **🎨 Modern & Premium UI**: Karanlık mod desteği ve Shadcn UI esintili minimalist tasarım.
-- **⚡️ Işık Hızında**: Tek tıkla kopyala-yapıştır kolaylığı.
-- **⭐ Favoriler**: En çok kullandığınız veri tiplerini favorilerinize sabitleyin.
+## 🛠 Kurulum
 
-## 📦 Üretilebilen Veri Tipleri
+### Chrome Web Store (Önerilen)
 
-| Finansal        | Kişisel      | Metin             |
-| :-------------- | :----------- | :---------------- |
-| TCKN            | Ad Soyad     | Rastgele Cümleler |
-| Vergi Kimlik No | E-posta      | Lorem Ipsum       |
-| IBAN            | Telefon      | Kullanıcı Adı     |
-| SGK Sicil No    | Doğum Tarihi | ...               |
-|                 | Tam Adres    |                   |
+[**Chrome Web Store'dan Yükle →**](https://chromewebstore.google.com/detail/data-helper/hboimhjgdphpokonjindjhgoihkmboli)
 
-## 🛠 Kurulum (Beta / Geliştirici Modu)
+### Geliştirici Modu
 
-Uygulama henüz Chrome Web Store'da onay sürecindedir. Şimdilik manuel olarak yükleyebilirsiniz:
+```bash
+git clone https://github.com/osmnnl/TestDataHelper.git
+cd TestDataHelper
+npm install
+npm run build
+```
 
-1. Bu depoyu klonlayın: `git clone https://github.com/osmnnl/TestDataHelper.git`
-2. Bağımlılıkları yükleyin: `npm install`
-3. Üretim sürümünü oluşturun: `npm run build`
-4. Chrome'da `chrome://extensions/` sayfasını açın.
-5. **"Geliştirici Modu"**nu aktif hale getirin.
-6. **"Paketlenmemiş öğe yükle"** diyerek projedeki `/dist` klasörünü seçin.
+1. Chrome'da `chrome://extensions/` açın
+2. "Geliştirici Modu" aktif edin
+3. "Paketlenmemiş öğe yükle" → `/dist` klasörünü seçin
 
-## 📅 Yol Haritası
+## 🖱️ Sağ Tık Menüsü Kullanımı
 
-- [ ] Chrome Web Store Yayını (Yakında!)
-- [ ] Daha fazla veri tipi (Passport No, Kredi Kartı vb.)
-- [ ] Çoklu dil desteği (English, German)
-- [ ] Export (JSON/CSV) özellikleri
+1. Herhangi bir web sitesinde bir input alanına sağ tıklayın
+2. **Data Helper** menüsünü seçin
+3. Kategori seçin (Finansal, Kişisel, Metin)
+4. İstediğiniz veri tipini seçin
+5. Input otomatik olarak dolar! ✓
 
 ## 💻 Teknolojiler
 
-- **Frontend**: React, TypeScript, Vite
+- **Frontend**: React 19, TypeScript, Vite
 - **Styling**: Vanilla CSS (Modern Design System)
-- **State Management**: React Hooks & Storage API
+- **Extension**: Chrome Manifest V3
 
 ## 📄 Lisans
 
-Bu proje MIT lisansı altında korunmaktadır.
+MIT License - [osmanunal](https://github.com/osmanunal)

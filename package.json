@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "build:ext": "BUILD_TARGET=extension tsc -b && BUILD_TARGET=extension vite build",
-    "build:pages": "tsc -b && vite build",
+    "build:ext": "tsc -b && vite build",
+    "build:pages": "BUILD_TARGET=pages tsc -b && BUILD_TARGET=pages vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },

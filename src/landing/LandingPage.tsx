@@ -1,7 +1,9 @@
-import React from "react";
 import "./LandingPage.css";
 
-const LandingPage: React.FC = () => {
+const CHROME_STORE_URL =
+  "https://chromewebstore.google.com/detail/data-helper/hboimhjgdphpokonjindjhgoihkmboli";
+
+function LandingPage() {
   return (
     <div className="landing-container">
       {/* Header */}
@@ -9,7 +11,7 @@ const LandingPage: React.FC = () => {
         <div className="header-content">
           <div className="logo">
             <img src="icons/icon48.png" alt="Logo" />
-            <span>Test Data Helper</span>
+            <span>Data Helper</span>
           </div>
           <nav>
             <a href="#features">Özellikler</a>
@@ -29,21 +31,18 @@ const LandingPage: React.FC = () => {
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-content">
-          <div className="hero-badge">✨ Yeni Sürüm v1.0 Yayında</div>
+          <div className="hero-badge">🎉 Chrome Web Store'da Yayında!</div>
           <h1>
             Test Verilerinizi <br />
             <span className="highlight">Işık Hızında</span> Üretin
           </h1>
           <p>
-            Yazılım geliştirme ve test süreçleri için ihtiyacınız olan tüm
-            veriler tek tıkla elinizin altında. Güvenli, hızlı ve tamamen yerel.
+            Popup veya <strong>sağ tık menüsü</strong> ile ihtiyacınız olan tüm
+            test verileri elinizin altında. Güvenli, hızlı ve tamamen yerel.
           </p>
           <div className="hero-actions">
-            <a
-              href="https://github.com/osmanunal/TestDataHelper"
-              className="btn btn-primary"
-            >
-              <span>Şimdi İndirin</span>
+            <a href={CHROME_STORE_URL} className="btn btn-primary">
+              <span>Chrome'a Ekle</span>
               <svg
                 width="20"
                 height="20"
@@ -72,6 +71,14 @@ const LandingPage: React.FC = () => {
       {/* Features Section */}
       <section id="features" className="features-grid">
         <div className="feature-card">
+          <div className="icon">🖱️</div>
+          <h3>Sağ Tık Menüsü</h3>
+          <p>
+            Herhangi bir input'a sağ tıklayın, Data Helper menüsünden
+            istediğiniz veriyi seçin ve input otomatik dolsun.
+          </p>
+        </div>
+        <div className="feature-card">
           <div className="icon">🛡️</div>
           <h3>Tamamen Güvenli</h3>
           <p>
@@ -85,14 +92,6 @@ const LandingPage: React.FC = () => {
           <p>
             Karmaşık test verilerini saniyeler içinde üretin ve tek tıkla
             kopyalayın. İş akışınızı asla bölmeyin.
-          </p>
-        </div>
-        <div className="feature-card">
-          <div className="icon">🎨</div>
-          <h3>Premium Tasarım</h3>
-          <p>
-            Shadcn UI esintili, modern ve kullanıcı dostu arayüz ile en iyi
-            kullanıcı deneyimini yaşayın.
           </p>
         </div>
       </section>
@@ -131,7 +130,7 @@ const LandingPage: React.FC = () => {
           </div>
           <div className="type-tag">
             <span>📝</span>
-            <span>Lorem Ipsum</span>
+            <span>Metin (50-500 kar.)</span>
           </div>
         </div>
       </section>
@@ -146,9 +145,9 @@ const LandingPage: React.FC = () => {
               Resmi mağaza üzerinden tek tıkla kurulum yaparak güncellemeleri
               otomatik alın.
             </p>
-            <button disabled className="btn btn-muted">
-              Çok Yakında
-            </button>
+            <a href={CHROME_STORE_URL} className="btn btn-success">
+              Chrome'a Ekle
+            </a>
           </div>
           <div className="install-card developer">
             <h3>Geliştirici Modu</h3>
@@ -158,7 +157,7 @@ const LandingPage: React.FC = () => {
             </p>
             <a
               href="https://github.com/osmanunal/TestDataHelper"
-              className="btn btn-success"
+              className="btn btn-secondary"
             >
               GitHub'dan İndir
             </a>
@@ -170,7 +169,7 @@ const LandingPage: React.FC = () => {
       <footer className="landing-footer">
         <div className="footer-content">
           <p>
-            © 2026 Test Data Helper.{" "}
+            © 2026 Data Helper.{" "}
             <a
               href="https://github.com/osmanunal"
               target="_blank"
@@ -184,6 +183,6 @@ const LandingPage: React.FC = () => {
       </footer>
     </div>
   );
-};
+}
 
 export default LandingPage;
