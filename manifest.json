@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Data Helper",
   "description": "Yazılım test süreçleri için hızlı ve güvenli fake data üretici",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "minimum_chrome_version": "88",
   "action": {
     "default_popup": "popup.html",
