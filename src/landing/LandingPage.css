@@ -523,6 +523,13 @@ nav a:hover::after {
   font-weight: 600;
 }
 
+.promo-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 .highlight-yellow {
   background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
   -webkit-background-clip: text;
