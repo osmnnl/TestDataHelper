@@ -18,6 +18,17 @@ import {
   generateBirthDate,
   generateFullAddress,
   generateText,
+  generateCreditCard,
+  generateCVV,
+  generateCardExpiry,
+  generatePlate,
+  generatePostalCode,
+  generateKEPEmail,
+  generateCompanyName,
+  generateMersisNo,
+  generateDriverLicenseClass,
+  generateDriverLicenseNo,
+  generatePassportNo,
 } from "../generators";
 
 interface DataItemConfig {
@@ -55,6 +66,36 @@ export const DATA_ITEMS_CONFIG: DataItemConfig[] = [
     label: "SGK Sicil No",
     category: "financial",
     generator: generateSGKNo,
+  },
+  {
+    id: "creditCard",
+    label: "Kredi Kartı No",
+    category: "financial",
+    generator: () => generateCreditCard("visa"),
+  },
+  {
+    id: "cvv",
+    label: "CVV",
+    category: "financial",
+    generator: () => generateCVV(3),
+  },
+  {
+    id: "cardExpiry",
+    label: "Son Kullanma (MM/YY)",
+    category: "financial",
+    generator: generateCardExpiry,
+  },
+  {
+    id: "mersis",
+    label: "MERSIS No",
+    category: "financial",
+    generator: generateMersisNo,
+  },
+  {
+    id: "companyName",
+    label: "Firma Adı",
+    category: "financial",
+    generator: generateCompanyName,
   },
   // Kişisel
   {
@@ -104,6 +145,42 @@ export const DATA_ITEMS_CONFIG: DataItemConfig[] = [
     label: "Tam Adres",
     category: "personal",
     generator: generateFullAddress,
+  },
+  {
+    id: "postalCode",
+    label: "Posta Kodu",
+    category: "personal",
+    generator: generatePostalCode,
+  },
+  {
+    id: "plate",
+    label: "Plaka",
+    category: "personal",
+    generator: generatePlate,
+  },
+  {
+    id: "kepEmail",
+    label: "KEP E-posta",
+    category: "personal",
+    generator: generateKEPEmail,
+  },
+  {
+    id: "driverLicense",
+    label: "Ehliyet Sınıfı",
+    category: "personal",
+    generator: generateDriverLicenseClass,
+  },
+  {
+    id: "driverLicenseNo",
+    label: "Ehliyet No",
+    category: "personal",
+    generator: generateDriverLicenseNo,
+  },
+  {
+    id: "passport",
+    label: "Pasaport No",
+    category: "personal",
+    generator: generatePassportNo,
   },
   // Metin
   {

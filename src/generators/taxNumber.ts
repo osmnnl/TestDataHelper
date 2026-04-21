@@ -1,3 +1,5 @@
+import { rng } from "./random";
+
 /**
  * Vergi Kimlik No Generator
  * 10 haneli numerik
@@ -10,11 +12,11 @@ export function generateVKN(): string {
   const digits: number[] = [];
 
   // İlk hane 1-9 arası (0 ile başlamaz)
-  digits.push(Math.floor(Math.random() * 9) + 1);
+  digits.push(Math.floor(rng() * 9) + 1);
 
   // 2-10. haneler 0-9 arası
   for (let i = 1; i < 10; i++) {
-    digits.push(Math.floor(Math.random() * 10));
+    digits.push(Math.floor(rng() * 10));
   }
 
   return digits.join("");

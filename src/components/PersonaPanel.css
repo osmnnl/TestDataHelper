@@ -1,0 +1,89 @@
+.persona-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.persona-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+
+.persona-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.persona-meta {
+  font-size: 11px;
+  color: var(--fg-muted);
+  margin-top: 2px;
+}
+
+.persona-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.persona-regen {
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--fg);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.persona-regen:hover {
+  background: var(--bg-subtle);
+  border-color: var(--border-hover);
+}
+
+.persona-regen:active {
+  transform: scale(0.97);
+}
+
+.persona-seed {
+  padding: 0 2px 6px;
+}
+
+.persona-seed input {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-card);
+  color: var(--fg);
+  font-size: 11px;
+  font-family: ui-monospace, "SF Mono", "Menlo", monospace;
+  box-sizing: border-box;
+}
+
+.persona-seed input:focus {
+  outline: none;
+  border-color: var(--border-strong);
+}
+
+.persona-hint {
+  font-size: 10px;
+  color: var(--fg-subtle);
+  padding: 0 2px 4px;
+}
+
+.persona-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  color: var(--fg-muted);
+  font-size: 12px;
+}

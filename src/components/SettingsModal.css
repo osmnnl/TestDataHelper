@@ -1,0 +1,214 @@
+.settings-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fade-in 0.12s ease;
+}
+
+.settings-modal {
+  width: 340px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  color: var(--fg);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.settings-header h2 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.settings-close {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: var(--fg-muted);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.settings-close:hover {
+  color: var(--fg);
+}
+
+.settings-section {
+  padding: 10px 0;
+  border-top: 1px solid var(--border);
+}
+
+.settings-section:first-of-type {
+  border-top: none;
+}
+
+.settings-section h3 {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.settings-section p {
+  margin: 0 0 8px;
+  font-size: 11px;
+  color: var(--fg-muted);
+}
+
+.settings-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.settings-actions button {
+  flex: 1;
+  min-width: 100px;
+  border: 1px solid var(--border);
+  background: var(--bg-subtle);
+  color: var(--fg);
+  padding: 7px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.12s ease;
+}
+
+.settings-actions button:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-card);
+}
+
+.settings-textarea {
+  width: 100%;
+  font-family: ui-monospace, "SF Mono", "Menlo", monospace;
+  font-size: 11px;
+  border: 1px solid var(--border);
+  background: var(--bg-subtle);
+  color: var(--fg);
+  border-radius: 6px;
+  padding: 6px 8px;
+  resize: vertical;
+  margin-bottom: 6px;
+  box-sizing: border-box;
+}
+
+.settings-textarea:focus {
+  outline: none;
+  border-color: var(--border-strong);
+}
+
+.settings-section code {
+  background: var(--bg-subtle);
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-family: ui-monospace, "SF Mono", "Menlo", monospace;
+  font-size: 10px;
+}
+
+.settings-inline-input {
+  flex: 1;
+  min-width: 120px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-subtle);
+  color: var(--fg);
+  font-size: 11px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.settings-inline-input:focus {
+  outline: none;
+  border-color: var(--border-strong);
+}
+
+.snapshot-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.snapshot-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  gap: 8px;
+}
+
+.snapshot-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.snapshot-sub {
+  font-size: 10px;
+  color: var(--fg-subtle);
+}
+
+.snapshot-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.snapshot-actions button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--fg);
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0;
+}
+
+.snapshot-actions button:hover {
+  border-color: var(--border-hover);
+}
+
+.settings-status {
+  margin-top: 10px;
+  padding: 8px 10px;
+  font-size: 11px;
+  background: var(--bg-subtle);
+  border-radius: 6px;
+  color: var(--fg-muted);
+  text-align: center;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

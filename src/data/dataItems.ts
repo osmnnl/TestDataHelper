@@ -18,6 +18,17 @@ import {
   generateUsername,
   generateBirthDate,
   generateFullAddress,
+  generateCreditCard,
+  generateCVV,
+  generateCardExpiry,
+  generatePlate,
+  generatePostalCode,
+  generateKEPEmail,
+  generateCompanyName,
+  generateMersisNo,
+  generateDriverLicenseClass,
+  generateDriverLicenseNo,
+  generatePassportNo,
 } from "../generators";
 
 export const DATA_ITEMS: DataItem[] = [
@@ -56,6 +67,41 @@ export const DATA_ITEMS: DataItem[] = [
     label: "SGK Sicil No",
     category: "financial",
     generator: () => generateSGKNo(),
+  },
+  {
+    id: "creditCard",
+    type: "creditCard",
+    label: "Kredi Kartı No",
+    category: "financial",
+    generator: () => generateCreditCard("visa"),
+  },
+  {
+    id: "cvv",
+    type: "cvv",
+    label: "CVV",
+    category: "financial",
+    generator: () => generateCVV(3),
+  },
+  {
+    id: "cardExpiry",
+    type: "cardExpiry",
+    label: "Son Kullanma",
+    category: "financial",
+    generator: () => generateCardExpiry(),
+  },
+  {
+    id: "mersis",
+    type: "mersis",
+    label: "MERSIS No",
+    category: "financial",
+    generator: () => generateMersisNo(),
+  },
+  {
+    id: "companyName",
+    type: "companyName",
+    label: "Firma Adı",
+    category: "financial",
+    generator: () => generateCompanyName(),
   },
 
   // Kişisel Bilgiler
@@ -115,6 +161,48 @@ export const DATA_ITEMS: DataItem[] = [
     category: "personal",
     isLongText: true,
     generator: () => generateFullAddress(),
+  },
+  {
+    id: "postalCode",
+    type: "postalCode",
+    label: "Posta Kodu",
+    category: "personal",
+    generator: () => generatePostalCode(),
+  },
+  {
+    id: "plate",
+    type: "plate",
+    label: "Plaka",
+    category: "personal",
+    generator: () => generatePlate(),
+  },
+  {
+    id: "kepEmail",
+    type: "kepEmail",
+    label: "KEP E-posta",
+    category: "personal",
+    generator: () => generateKEPEmail(),
+  },
+  {
+    id: "driverLicense",
+    type: "driverLicense",
+    label: "Ehliyet Sınıfı",
+    category: "personal",
+    generator: () => generateDriverLicenseClass(),
+  },
+  {
+    id: "driverLicenseNo",
+    type: "driverLicenseNo",
+    label: "Ehliyet No",
+    category: "personal",
+    generator: () => generateDriverLicenseNo(),
+  },
+  {
+    id: "passport",
+    type: "passport",
+    label: "Pasaport No",
+    category: "personal",
+    generator: () => generatePassportNo(),
   },
 ];
 

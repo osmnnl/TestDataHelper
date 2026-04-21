@@ -4,6 +4,7 @@ import {
   getFavorites,
   addFavorite as addFav,
   removeFavorite as removeFav,
+  reorderFavorites as reorderFav,
 } from "../storage/favorites";
 
 /**
@@ -50,6 +51,11 @@ export function useFavorites() {
     [favorites]
   );
 
+  const reorder = useCallback(async (orderedIds: string[]) => {
+    const updated = await reorderFav(orderedIds);
+    setFavorites(updated);
+  }, []);
+
   return {
     favorites,
     loading,
@@ -57,5 +63,6 @@ export function useFavorites() {
     removeFavorite,
     toggleFavorite,
     isFavorite,
+    reorder,
   };
 }

@@ -13,6 +13,17 @@ export type DataType =
   | "username"
   | "birthDate"
   | "address"
+  | "postalCode"
+  | "plate"
+  | "creditCard"
+  | "cvv"
+  | "cardExpiry"
+  | "kepEmail"
+  | "companyName"
+  | "mersis"
+  | "driverLicense"
+  | "driverLicenseNo"
+  | "passport"
   | "text";
 
 // Kategori tipleri

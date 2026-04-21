@@ -1,3 +1,5 @@
+import { rng } from "./random";
+
 /**
  * Adres Generator
  * Ülke, İl, İlçe, Mahalle, Sokak, Bina No, Daire No, Tam Adres
@@ -6,11 +8,11 @@
 import { CITIES, DISTRICTS, NEIGHBORHOODS, STREETS } from "../data/names";
 
 function getRandomItem<T>(array: T[]): T {
-  return array[Math.floor(Math.random() * array.length)];
+  return array[Math.floor(rng() * array.length)];
 }
 
 function getRandomNumber(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  return Math.floor(rng() * (max - min + 1)) + min;
 }
 
 /**

@@ -1,0 +1,38 @@
+.smart-fill-bar {
+  padding: 12px 14px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.smart-fill-btn {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--bg-inverse);
+  color: var(--fg-inverse);
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.smart-fill-btn:hover {
+  opacity: 0.92;
+}
+
+.smart-fill-btn:active {
+  transform: scale(0.98);
+}
+
+.smart-fill-status {
+  margin-top: 8px;
+  padding: 6px 10px;
+  font-size: 11px;
+  color: var(--fg-muted);
+  background: var(--bg-subtle);
+  border-radius: 6px;
+  text-align: center;
+}

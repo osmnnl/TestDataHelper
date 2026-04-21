@@ -20,7 +20,15 @@ export function DataCard({
   onRegenerate,
 }: DataCardProps) {
   return (
-    <fieldset className={`data-card ${isLongText ? "long-text" : ""}`}>
+    <fieldset
+      className={`data-card ${isLongText ? "long-text" : ""}`}
+      draggable
+      onDragStart={(e) => {
+        e.dataTransfer.setData("text/plain", value);
+        e.dataTransfer.effectAllowed = "copy";
+      }}
+      title="Sürükleyip sayfadaki input'a bırakabilirsin"
+    >
       <legend className="data-card-label">{label}</legend>
       <div className="data-card-content">
         <span className="data-card-value" title={value}>

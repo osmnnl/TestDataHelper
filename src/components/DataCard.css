@@ -4,8 +4,8 @@
   width: 100%;
   padding: 10px 12px 10px;
   margin: 0;
-  background: hsl(0 0% 100%);
-  border: 1px solid hsl(240 5.9% 90%);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   border-radius: 8px;
   transition: all 0.15s ease;
   box-sizing: border-box;
@@ -13,7 +13,7 @@
 }
 
 .data-card:hover {
-  border-color: hsl(240 5% 84%);
+  border-color: var(--border-hover);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
@@ -21,7 +21,7 @@
   padding: 0 6px;
   margin-left: 4px;
   font-size: 10px;
-  color: hsl(240 3.8% 46.1%);
+  color: var(--fg-muted);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.3px;
@@ -39,7 +39,7 @@
   flex: 1;
   min-width: 0;
   font-size: 13px;
-  color: hsl(240 10% 3.9%);
+  color: var(--fg);
   font-family: ui-monospace, "SF Mono", "Menlo", monospace;
   white-space: nowrap;
   overflow: hidden;
@@ -74,22 +74,22 @@
   position: relative;
   width: 28px;
   height: 28px;
-  border: 1px solid hsl(240 5.9% 90%);
-  background: hsl(0 0% 100%);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
   border-radius: 6px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: hsl(240 3.8% 46.1%);
+  color: var(--fg-muted);
   font-size: 14px;
   transition: all 0.15s ease;
 }
 
 .action-btn:hover {
-  background: hsl(240 4.8% 95.9%);
-  border-color: hsl(240 5% 84%);
-  color: hsl(240 10% 3.9%);
+  background: var(--bg-subtle);
+  border-color: var(--border-hover);
+  color: var(--fg);
 }
 
 .action-btn:active {
@@ -103,8 +103,8 @@
   left: 50%;
   transform: translateX(-50%);
   padding: 5px 8px;
-  background: hsl(240 10% 3.9%);
-  color: hsl(0 0% 98%);
+  background: var(--bg-inverse);
+  color: var(--fg-inverse);
   font-size: 11px;
   font-weight: 500;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
@@ -125,7 +125,7 @@
   left: 50%;
   transform: translateX(-50%);
   border: 4px solid transparent;
-  border-top-color: hsl(240 10% 3.9%);
+  border-top-color: var(--bg-inverse);
 }
 
 .action-btn:hover .tooltip {
@@ -134,22 +134,22 @@
 }
 
 .favorite-btn {
-  color: hsl(240 3.8% 46.1%);
+  color: var(--fg-muted);
 }
 
 .favorite-btn:hover {
-  color: hsl(47.9 95.8% 53.1%);
-  border-color: hsl(47.9 95.8% 63.1%);
-  background: hsl(48 96.5% 95%);
+  color: var(--accent-yellow);
+  border-color: var(--accent-yellow-border);
+  background: var(--accent-yellow-bg);
 }
 
 .favorite-btn.favorite-active {
-  color: hsl(47.9 95.8% 53.1%);
-  border-color: hsl(47.9 95.8% 63.1%);
-  background: hsl(48 96.5% 95%);
+  color: var(--accent-yellow);
+  border-color: var(--accent-yellow-border);
+  background: var(--accent-yellow-bg);
 }
 
 .favorite-btn.favorite-active:hover {
-  color: hsl(36 100% 50%);
-  background: hsl(48 100% 88%);
+  color: var(--accent-orange);
+  background: var(--accent-orange-bg);
 }

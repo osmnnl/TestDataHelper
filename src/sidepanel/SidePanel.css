@@ -1,0 +1,17 @@
+.sidepanel {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg-subtle);
+}
+
+/* Popup zaten 380px fixed; side panel'de full width olsun */
+.sidepanel .popup {
+  width: 100%;
+  max-height: none;
+  min-height: 0;
+}
+
+.sidepanel .popup-content {
+  max-height: none;
+}

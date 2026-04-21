@@ -1,3 +1,5 @@
+import { rng } from "./random";
+
 /**
  * Türk IBAN Generator
  * Format: TR + 2 kontrol hanesi + 5 banka kodu + 16 hesap no = 26 karakter
@@ -8,19 +10,27 @@
  * 3. Mod 97 al, 98'den çıkar = kontrol haneleri
  */
 
-// Türk banka kodları (örnek)
-const BANK_CODES = [
-  "00010", // T.C. Ziraat Bankası
-  "00012", // Halkbank
-  "00015", // VakıfBank
-  "00032", // TEB
-  "00046", // Akbank
-  "00062", // Garanti BBVA
-  "00064", // İş Bankası
-  "00067", // Yapı Kredi
-  "00099", // ING
-  "00111", // HSBC
+// Türk banka kodları
+export const TR_BANKS: ReadonlyArray<{ code: string; name: string }> = [
+  { code: "00010", name: "T.C. Ziraat Bankası" },
+  { code: "00012", name: "Halkbank" },
+  { code: "00015", name: "VakıfBank" },
+  { code: "00032", name: "TEB" },
+  { code: "00046", name: "Akbank" },
+  { code: "00062", name: "Garanti BBVA" },
+  { code: "00064", name: "İş Bankası" },
+  { code: "00067", name: "Yapı Kredi" },
+  { code: "00099", name: "ING" },
+  { code: "00111", name: "HSBC" },
+  { code: "00103", name: "Finansbank (QNB)" },
+  { code: "00134", name: "DenizBank" },
+  { code: "00143", name: "Odea Bank" },
+  { code: "00205", name: "Kuveyt Türk" },
+  { code: "00206", name: "Albaraka Türk" },
+  { code: "00209", name: "Türkiye Finans" },
 ];
+
+const BANK_CODES = TR_BANKS.map((b) => b.code);
 
 function mod97(numStr: string): number {
   let checksum = 0;
@@ -30,14 +40,16 @@ function mod97(numStr: string): number {
   return checksum;
 }
 
-export function generateIBAN(): string {
-  // Rastgele banka kodu seç
-  const bankCode = BANK_CODES[Math.floor(Math.random() * BANK_CODES.length)];
+export function generateIBAN(preferredBankCode?: string): string {
+  const bankCode =
+    preferredBankCode && BANK_CODES.includes(preferredBankCode)
+      ? preferredBankCode
+      : BANK_CODES[Math.floor(rng() * BANK_CODES.length)];
 
   // 16 haneli hesap numarası oluştur (0 ile başlayabilir)
   let accountNumber = "";
   for (let i = 0; i < 16; i++) {
-    accountNumber += Math.floor(Math.random() * 10).toString();
+    accountNumber += Math.floor(rng() * 10).toString();
   }
 
   // Kontrol hanesi hesaplama için string oluştur

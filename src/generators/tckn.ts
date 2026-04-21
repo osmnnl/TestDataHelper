@@ -1,3 +1,5 @@
+import { rng } from "./random";
+
 /**
  * TC Kimlik No Generator
  * 11 haneli, Türkiye Cumhuriyeti kimlik numarası algoritmasına uygun
@@ -14,11 +16,11 @@ export function generateTCKN(): string {
   const digits: number[] = [];
 
   // İlk hane 1-9 arası
-  digits.push(Math.floor(Math.random() * 9) + 1);
+  digits.push(Math.floor(rng() * 9) + 1);
 
   // 2-9. haneler 0-9 arası
   for (let i = 1; i < 9; i++) {
-    digits.push(Math.floor(Math.random() * 10));
+    digits.push(Math.floor(rng() * 10));
   }
 
   // Tek pozisyondaki hanelerin toplamı (1, 3, 5, 7, 9. pozisyonlar - 0-indexed: 0, 2, 4, 6, 8)

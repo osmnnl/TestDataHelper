@@ -1,4 +1,5 @@
 import "./LandingPage.css";
+import { WebDemo } from "./WebDemo";
 
 const CHROME_STORE_URL =
   "https://chromewebstore.google.com/detail/data-helper/hboimhjgdphpokonjindjhgoihkmboli";
@@ -14,6 +15,7 @@ function LandingPage() {
             <span>Data Helper</span>
           </div>
           <nav>
+            <a href="#demo">Dene</a>
             <a href="#features">Özellikler</a>
             <a href="#data-types">Veri Tipleri</a>
             <a href="#install">Kurulum</a>
@@ -68,30 +70,106 @@ function LandingPage() {
         </div>
       </section>
 
+      <WebDemo />
+
       {/* Features Section */}
       <section id="features" className="features-grid">
         <div className="feature-card">
-          <div className="icon">🖱️</div>
-          <h3>Sağ Tık Menüsü</h3>
+          <div className="icon">🧑</div>
+          <h3>Persona Modu</h3>
           <p>
-            Herhangi bir input'a sağ tıklayın, Data Helper menüsünden
-            istediğiniz veriyi seçin ve input otomatik dolsun.
-          </p>
-        </div>
-        <div className="feature-card">
-          <div className="icon">🛡️</div>
-          <h3>Tamamen Güvenli</h3>
-          <p>
-            Veriler tamamen yerel olarak tarayıcınızda üretilir. Hiçbir veri
-            dışarı aktarılmaz veya kaydedilmez.
+            Tek bir kişiye ait TCKN, ad, e-posta, IBAN, kredi kartı ve adres —
+            tüm alanlar birbiriyle tutarlı. Tester iş akışında en büyük
+            kazanç.
           </p>
         </div>
         <div className="feature-card">
           <div className="icon">⚡</div>
-          <h3>Işık Hızında</h3>
+          <h3>Akıllı Form Doldurma</h3>
           <p>
-            Karmaşık test verilerini saniyeler içinde üretin ve tek tıkla
-            kopyalayın. İş akışınızı asla bölmeyin.
+            "Bu formu persona ile doldur" tek tıkla sayfadaki tüm input'ları
+            etiket/name'e göre heuristikle doldurur. Yüzlerce alan saniyeler
+            içinde biter.
+          </p>
+        </div>
+        <div className="feature-card">
+          <div className="icon">🖱️</div>
+          <h3>Sağ Tık Menüsü</h3>
+          <p>
+            input, textarea, select veya contenteditable — hepsinde çalışır.
+            Menüden tip seç, otomatik dolsun.
+          </p>
+        </div>
+        <div className="feature-card">
+          <div className="icon">🎲</div>
+          <h3>Deterministik Seed</h3>
+          <p>
+            Aynı seed = aynı persona. Regresyon senaryolarını ekibinle paylaş,
+            bire bir aynı test verisiyle tekrar oynat.
+          </p>
+        </div>
+        <div className="feature-card">
+          <div className="icon">💾</div>
+          <h3>Form Snapshot</h3>
+          <p>
+            Formu olduğu gibi kaydet, aynı URL'de sonra geri yükle. Test
+            senaryolarını fixture olarak sakla.
+          </p>
+        </div>
+        <div className="feature-card">
+          <div className="icon">🧩</div>
+          <h3>Regex Pattern Üretici</h3>
+          <p>
+            <code>[A-Z]{"{"}3{"}"}-\d{"{"}5{"}"}</code> gibi özel formatlar için
+            kendi kalıbını yaz, eşleşen rastgele dize üret.
+          </p>
+        </div>
+        <div className="feature-card">
+          <div className="icon">🖐️</div>
+          <h3>Sürükle-Bırak Doldurma</h3>
+          <p>
+            Yan panel veya popup'tan herhangi bir veri kartını sayfadaki
+            input'a sürükleyip bırak — native tarayıcı mekanizması.
+          </p>
+        </div>
+        <div className="feature-card">
+          <div className="icon">🛡️</div>
+          <h3>Gizlilik Öncelikli</h3>
+          <p>
+            Kalıcı content-script yok, <code>&lt;all_urls&gt;</code> yok. Sağ-tık
+            anında tek seferlik enjeksiyon. Sunucu yok, analytics yok.
+          </p>
+        </div>
+        <div className="feature-card">
+          <div className="icon">🌙</div>
+          <h3>Karanlık Mod</h3>
+          <p>
+            İşletim sistemi temasını otomatik algılar. Tam CSS token sistemi
+            ile popup, side panel ve ayarlar — hepsi uyumlu.
+          </p>
+        </div>
+        <div className="feature-card">
+          <div className="icon">📊</div>
+          <h3>Toplu CSV Export</h3>
+          <p>
+            25 tutarlı persona'yı tek tıkla CSV olarak indir. Mock veri seti
+            oluşturmak için idealdir.
+          </p>
+        </div>
+        <div className="feature-card">
+          <div className="icon">🔗</div>
+          <h3>Persona Paylaşım Kodu</h3>
+          <p>
+            <code>dhp:v1:…</code> formatında base64 kod üret, ekibinle paylaş.
+            Alıcı tek tıkla aynı persona'yı yükler — sunucu yok.
+          </p>
+        </div>
+        <div className="feature-card">
+          <div className="icon">📱</div>
+          <h3>Side Panel + Kısayollar</h3>
+          <p>
+            Chrome 114+ yan panel desteği, <code>Ctrl+Shift+D</code> popup
+            kısayolu, <code>/</code> ile hızlı arama, sürüklenebilir favoriler.
           </p>
         </div>
       </section>
@@ -99,39 +177,34 @@ function LandingPage() {
       {/* Supported Data Types */}
       <section id="data-types" className="data-types">
         <h2>Kapsamlı Veri Kütüphanesi</h2>
+        <p className="data-types-sub">
+          30+ Türk lokaline özel veri tipi — hepsi doğrulama algoritmalarına
+          (TCKN check digit, IBAN mod97, Luhn) uygun formatta üretilir.
+        </p>
         <div className="type-tags">
-          <div className="type-tag">
-            <span>💳</span>
-            <span>TCKN / VKN</span>
-          </div>
-          <div className="type-tag">
-            <span>🏦</span>
-            <span>IBAN Üretici</span>
-          </div>
-          <div className="type-tag">
-            <span>📱</span>
-            <span>Telefon No</span>
-          </div>
-          <div className="type-tag">
-            <span>👤</span>
-            <span>Ad Soyad</span>
-          </div>
-          <div className="type-tag">
-            <span>📍</span>
-            <span>Rastgele Adres</span>
-          </div>
-          <div className="type-tag">
-            <span>📧</span>
-            <span>E-posta</span>
-          </div>
-          <div className="type-tag">
-            <span>📜</span>
-            <span>SGK Sicil No</span>
-          </div>
-          <div className="type-tag">
-            <span>📝</span>
-            <span>Metin (50-500 kar.)</span>
-          </div>
+          <div className="type-tag"><span>🆔</span><span>TCKN</span></div>
+          <div className="type-tag"><span>🏢</span><span>VKN</span></div>
+          <div className="type-tag"><span>📇</span><span>MERSIS</span></div>
+          <div className="type-tag"><span>🏛️</span><span>SGK</span></div>
+          <div className="type-tag"><span>🧾</span><span>SMMM</span></div>
+          <div className="type-tag"><span>🏦</span><span>IBAN (16 banka)</span></div>
+          <div className="type-tag"><span>💳</span><span>Kredi Kartı (Luhn)</span></div>
+          <div className="type-tag"><span>🔐</span><span>CVV + MM/YY</span></div>
+          <div className="type-tag"><span>🏭</span><span>Firma Adı (A.Ş./Ltd.)</span></div>
+          <div className="type-tag"><span>👤</span><span>Ad / Soyad</span></div>
+          <div className="type-tag"><span>📧</span><span>E-posta</span></div>
+          <div className="type-tag"><span>📨</span><span>KEP E-posta</span></div>
+          <div className="type-tag"><span>🧑‍💻</span><span>Kullanıcı Adı</span></div>
+          <div className="type-tag"><span>📱</span><span>Telefon (GSM)</span></div>
+          <div className="type-tag"><span>🎂</span><span>Doğum Tarihi</span></div>
+          <div className="type-tag"><span>🏠</span><span>Tam Adres</span></div>
+          <div className="type-tag"><span>🏘️</span><span>Mahalle / Sokak</span></div>
+          <div className="type-tag"><span>📮</span><span>Posta Kodu</span></div>
+          <div className="type-tag"><span>🚗</span><span>Plaka</span></div>
+          <div className="type-tag"><span>🛂</span><span>Pasaport</span></div>
+          <div className="type-tag"><span>🪪</span><span>Ehliyet (Sınıf + No)</span></div>
+          <div className="type-tag"><span>📝</span><span>Metin (1-2000 kar.)</span></div>
+          <div className="type-tag"><span>🧩</span><span>Özel Regex</span></div>
         </div>
       </section>
 

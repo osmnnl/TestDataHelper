@@ -1,3 +1,5 @@
+import { rng } from "./random";
+
 /**
  * SGK Sicil Numarası Generator
  * Türkiye'de kullanılan SGK formatı
@@ -11,7 +13,7 @@ export function generateSGKNo(): string {
   // SGK numaraları genelde 10 haneli
   let sgkNo = "";
   for (let i = 0; i < 10; i++) {
-    sgkNo += Math.floor(Math.random() * 10).toString();
+    sgkNo += Math.floor(rng() * 10).toString();
   }
   return sgkNo;
 }

@@ -1,3 +1,5 @@
+import { rng } from "./random";
+
 /**
  * Türk GSM Telefon Numarası Generator
  * Format: 05XX XXX XX XX
@@ -52,12 +54,12 @@ const GSM_PREFIXES = [
 
 export function generatePhone(): string {
   // Rastgele operatör öneki seç
-  const prefix = GSM_PREFIXES[Math.floor(Math.random() * GSM_PREFIXES.length)];
+  const prefix = GSM_PREFIXES[Math.floor(rng() * GSM_PREFIXES.length)];
 
   // 7 haneli numara oluştur
   let number = "";
   for (let i = 0; i < 7; i++) {
-    number += Math.floor(Math.random() * 10).toString();
+    number += Math.floor(rng() * 10).toString();
   }
 
   return `0${prefix}${number}`;

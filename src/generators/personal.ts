@@ -1,12 +1,15 @@
+import { rng } from "./random";
+
 /**
  * Kişisel Bilgi Generator
  * Ad, Soyad, Ad Soyad, Email, Username üretimi
  */
 
 import { ALL_FIRST_NAMES, LAST_NAMES } from "../data/names";
+import { KEP_DOMAINS } from "../data/kepProviders";
 
 function getRandomItem<T>(array: T[]): T {
-  return array[Math.floor(Math.random() * array.length)];
+  return array[Math.floor(rng() * array.length)];
 }
 
 /**
@@ -71,13 +74,28 @@ export function generateEmail(): string {
 }
 
 /**
+ * KEP (Kayıtlı Elektronik Posta) adresi üret.
+ * Format: ad.soyad@hsXX.kep.tr
+ */
+export function generateKEPEmail(): string {
+  const firstName = turkishToAscii(generateFirstName())
+    .toLowerCase()
+    .replace(/\s+/g, "");
+  const lastName = turkishToAscii(generateLastName())
+    .toLowerCase()
+    .replace(/\s+/g, "");
+  const domain = KEP_DOMAINS[Math.floor(rng() * KEP_DOMAINS.length)];
+  return `${firstName}.${lastName}@${domain}`;
+}
+
+/**
  * Kullanıcı adı üret
  * Format: ad + soyad + rastgele sayı
  */
 export function generateUsername(): string {
   const firstName = turkishToAscii(generateFirstName()).toLowerCase();
   const lastName = turkishToAscii(generateLastName()).toLowerCase();
-  const randomNum = Math.floor(Math.random() * 1000);
+  const randomNum = Math.floor(rng() * 1000);
 
   return `${firstName}${lastName}${randomNum}`;
 }
@@ -91,10 +109,10 @@ export function generateBirthDate(): string {
   const minAge = 18;
   const maxAge = 65;
 
-  const randomAge = Math.floor(Math.random() * (maxAge - minAge + 1)) + minAge;
+  const randomAge = Math.floor(rng() * (maxAge - minAge + 1)) + minAge;
   const birthYear = now.getFullYear() - randomAge;
-  const birthMonth = Math.floor(Math.random() * 12) + 1;
-  const birthDay = Math.floor(Math.random() * 28) + 1;
+  const birthMonth = Math.floor(rng() * 12) + 1;
+  const birthDay = Math.floor(rng() * 28) + 1;
 
   const day = birthDay.toString().padStart(2, "0");
   const month = birthMonth.toString().padStart(2, "0");

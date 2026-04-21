@@ -333,8 +333,16 @@ nav a:hover::after {
 .data-types h2 {
   font-size: 3.5rem;
   font-weight: 800;
-  margin-bottom: 4rem;
+  margin-bottom: 1rem;
   letter-spacing: -0.04em;
+}
+
+.data-types-sub {
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 0 auto 3rem;
+  font-size: 1.05rem;
+  line-height: 1.6;
 }
 
 .type-tags {

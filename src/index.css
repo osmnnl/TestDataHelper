@@ -1,66 +1,79 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    system-ui, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color-scheme: light dark;
+
+  /* Design tokens — light */
+  --bg-card: hsl(0 0% 100%);
+  --bg-card-50: hsl(0 0% 100% / 0.5);
+  --bg-subtle: hsl(240 4.8% 95.9%);
+  --bg-inverse: hsl(240 10% 3.9%);
+  --fg: hsl(240 10% 3.9%);
+  --fg-strong: hsl(240 5.9% 10%);
+  --fg-muted: hsl(240 3.8% 46.1%);
+  --fg-subtle: hsl(240 5% 64.9%);
+  --fg-inverse: hsl(0 0% 98%);
+  --border: hsl(240 5.9% 86%);
+  --border-strong: hsl(240 5.9% 76%);
+  --border-hover: hsl(240 5% 80%);
+  --scrollbar: hsl(240 5.9% 85%);
+  --scrollbar-hover: hsl(240 3.8% 70%);
+
+  /* Accents (light + dark paylaşımlı, sarı favori rengi) */
+  --accent-yellow: hsl(47.9 95.8% 53.1%);
+  --accent-yellow-border: hsl(47.9 95.8% 63.1%);
+  --accent-yellow-bg: hsl(48 96.5% 95%);
+  --accent-orange: hsl(36 100% 50%);
+  --accent-orange-bg: hsl(48 100% 88%);
+
+  /* Text generator surface (popup bileşeni) */
+  --tg-bg: #fff;
+  --tg-fg: #1d1d1f;
+  --tg-btn-bg: #1d1d1f;
+  --tg-btn-fg: #fff;
+  --tg-btn-bg-hover: #000;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-card: hsl(240 6% 12%);
+    --bg-card-50: hsl(240 6% 12% / 0.5);
+    --bg-subtle: hsl(240 6% 9%);
+    --bg-inverse: hsl(0 0% 98%);
+    --fg: hsl(0 0% 95%);
+    --fg-strong: hsl(0 0% 98%);
+    --fg-muted: hsl(240 5% 65%);
+    --fg-subtle: hsl(240 4% 46%);
+    --fg-inverse: hsl(240 10% 3.9%);
+    --border: hsl(240 4% 20%);
+    --border-strong: hsl(240 4% 28%);
+    --border-hover: hsl(240 4% 30%);
+    --scrollbar: hsl(240 4% 25%);
+    --scrollbar-hover: hsl(240 4% 40%);
+
+    --accent-yellow: hsl(47.9 95.8% 60%);
+    --accent-yellow-border: hsl(47.9 95.8% 55%);
+    --accent-yellow-bg: hsl(48 40% 18%);
+    --accent-orange: hsl(36 100% 60%);
+    --accent-orange-bg: hsl(36 40% 20%);
+
+    --tg-bg: hsl(240 6% 12%);
+    --tg-fg: hsl(0 0% 95%);
+    --tg-btn-bg: hsl(0 0% 95%);
+    --tg-btn-fg: hsl(240 10% 3.9%);
+    --tg-btn-bg-hover: hsl(0 0% 100%);
+  }
 }
 
 body {
   margin: 0;
   min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+  background: var(--bg-subtle);
+  color: var(--fg);
 }

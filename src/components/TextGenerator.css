@@ -25,8 +25,8 @@
   padding: 6px 10px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 6px;
-  background: #fff;
-  color: #1d1d1f;
+  background: var(--tg-bg);
+  color: var(--tg-fg);
   font-size: 13px;
   text-align: center;
   font-family: "SF Mono", "Menlo", monospace;
@@ -49,7 +49,7 @@
 .option-checkbox input {
   width: 16px;
   height: 16px;
-  accent-color: #1d1d1f;
+  accent-color: var(--tg-fg);
   cursor: pointer;
 }
 
@@ -57,8 +57,8 @@
   padding: 6px 10px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 6px;
-  background: #fff;
-  color: #1d1d1f;
+  background: var(--tg-bg);
+  color: var(--tg-fg);
   font-size: 13px;
   cursor: pointer;
 }
@@ -86,12 +86,12 @@
 }
 
 .generate-btn {
-  background: #1d1d1f;
-  color: #fff;
+  background: var(--tg-btn-bg);
+  color: var(--tg-btn-fg);
 }
 
 .generate-btn:hover {
-  background: #000;
+  background: var(--tg-btn-bg-hover);
 }
 
 .generate-btn:active {
@@ -100,7 +100,7 @@
 
 .copy-text-btn {
   background: rgba(0, 0, 0, 0.06);
-  color: #1d1d1f;
+  color: var(--tg-fg);
 }
 
 .copy-text-btn:hover:not(:disabled) {
@@ -132,7 +132,7 @@
 .generated-content {
   font-family: "SF Mono", "Menlo", "Consolas", monospace;
   font-size: 12px;
-  color: #1d1d1f;
+  color: var(--tg-fg);
   word-break: break-all;
   line-height: 1.5;
 }

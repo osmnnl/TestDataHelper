@@ -1,3 +1,4 @@
+import { rng } from "./random";
 import type { GeneratorOptions } from "../types";
 
 /**
@@ -47,7 +48,7 @@ export function generateText(options: GeneratorOptions = {}): string {
   const poolLength = charPool.length;
 
   for (let i = 0; i < length; i++) {
-    result += charPool.charAt(Math.floor(Math.random() * poolLength));
+    result += charPool.charAt(Math.floor(rng() * poolLength));
   }
 
   return result;
@@ -92,7 +93,7 @@ export function generateLoremIpsum(wordCount: number = 10): string {
   const words: string[] = [];
 
   for (let i = 0; i < wordCount; i++) {
-    words.push(LOREM_WORDS[Math.floor(Math.random() * LOREM_WORDS.length)]);
+    words.push(LOREM_WORDS[Math.floor(rng() * LOREM_WORDS.length)]);
   }
 
   // İlk harfi büyük yap

@@ -1,3 +1,5 @@
+import { rng } from "./random";
+
 /**
  * SMMM (Serbest Muhasebeci Mali Müşavir) Sicil No Generator
  * Format: 5 haneli numerik
@@ -8,7 +10,7 @@ export function generateSMMMNo(): string {
 
   // 5 haneli numara (ilk hane 0 olabilir)
   for (let i = 0; i < 5; i++) {
-    digits.push(Math.floor(Math.random() * 10));
+    digits.push(Math.floor(rng() * 10));
   }
 
   return digits.join("");

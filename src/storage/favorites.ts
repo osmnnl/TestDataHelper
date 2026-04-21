@@ -1,6 +1,7 @@
 /**
  * Storage Yönetimi
- * chrome.storage.local ile favori ve ayar persistence
+ * Favori ve ayarlar için sync-first, local fallback, browser dışı (dev) için
+ * localStorage fallback.
  */
 
 import type { FavoriteItem, GeneratorOptions } from "../types";
@@ -14,116 +15,158 @@ const DEFAULT_FAVORITES: FavoriteItem[] = [
   { id: "phone", order: 3, addedAt: Date.now() },
 ];
 
+interface StorageAdapter {
+  get<T>(key: string): Promise<T | undefined>;
+  set<T>(key: string, value: T): Promise<void>;
+}
+
 /**
- * Favorileri getir
+ * Sync-first adapter: önce chrome.storage.sync, sonra chrome.storage.local,
+ * en son localStorage (dev ortamı). Bu sayede eklenti birden fazla cihazda
+ * açıkken favoriler senkronize olur.
  */
+const adapter: StorageAdapter = {
+  async get<T>(key: string): Promise<T | undefined> {
+    try {
+      const sync = await chrome.storage.sync.get(key);
+      if (sync[key] !== undefined) return sync[key] as T;
+      const local = await chrome.storage.local.get(key);
+      return local[key] as T | undefined;
+    } catch {
+      const stored = localStorage.getItem(key);
+      return stored ? (JSON.parse(stored) as T) : undefined;
+    }
+  },
+  async set<T>(key: string, value: T): Promise<void> {
+    try {
+      // sync başarısız olursa (quota) local'a düş
+      try {
+        await chrome.storage.sync.set({ [key]: value });
+      } catch {
+        await chrome.storage.local.set({ [key]: value });
+      }
+    } catch {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+  },
+};
+
 export async function getFavorites(): Promise<FavoriteItem[]> {
-  try {
-    const result = await chrome.storage.local.get(STORAGE_KEYS.FAVORITES);
-    const favorites = result[STORAGE_KEYS.FAVORITES] as
-      | FavoriteItem[]
-      | undefined;
-    return favorites ?? DEFAULT_FAVORITES;
-  } catch {
-    // Chrome API mevcut değilme (development)
-    const stored = localStorage.getItem(STORAGE_KEYS.FAVORITES);
-    return stored ? (JSON.parse(stored) as FavoriteItem[]) : DEFAULT_FAVORITES;
-  }
+  const favorites = await adapter.get<FavoriteItem[]>(STORAGE_KEYS.FAVORITES);
+  return favorites ?? DEFAULT_FAVORITES;
 }
 
-/**
- * Favorileri kaydet
- */
 export async function setFavorites(favorites: FavoriteItem[]): Promise<void> {
-  try {
-    await chrome.storage.local.set({ [STORAGE_KEYS.FAVORITES]: favorites });
-  } catch {
-    localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(favorites));
-  }
+  await adapter.set(STORAGE_KEYS.FAVORITES, favorites);
 }
 
-/**
- * Favori ekle
- */
 export async function addFavorite(id: string): Promise<FavoriteItem[]> {
   const favorites = await getFavorites();
-
-  // Zaten varsa ekleme
-  if (favorites.some((f) => f.id === id)) {
-    return favorites;
-  }
+  if (favorites.some((f) => f.id === id)) return favorites;
 
   const newFavorite: FavoriteItem = {
     id,
     order: favorites.length,
     addedAt: Date.now(),
   };
-
   const updated = [...favorites, newFavorite];
   await setFavorites(updated);
   return updated;
 }
 
-/**
- * Favori kaldır
- */
 export async function removeFavorite(id: string): Promise<FavoriteItem[]> {
   const favorites = await getFavorites();
   const updated = favorites
     .filter((f) => f.id !== id)
     .map((f, index) => ({ ...f, order: index }));
-
   await setFavorites(updated);
   return updated;
 }
 
-/**
- * Favori kontrolü
- */
+export async function reorderFavorites(
+  orderedIds: string[],
+): Promise<FavoriteItem[]> {
+  const favorites = await getFavorites();
+  const byId = new Map(favorites.map((f) => [f.id, f]));
+  const updated: FavoriteItem[] = [];
+  orderedIds.forEach((id, index) => {
+    const existing = byId.get(id);
+    if (existing) updated.push({ ...existing, order: index });
+  });
+  // Listede olmayan favorileri sona ekle (güvenlik)
+  favorites.forEach((f) => {
+    if (!orderedIds.includes(f.id)) {
+      updated.push({ ...f, order: updated.length });
+    }
+  });
+  await setFavorites(updated);
+  return updated;
+}
+
 export async function isFavorite(id: string): Promise<boolean> {
   const favorites = await getFavorites();
   return favorites.some((f) => f.id === id);
 }
 
 // Settings
-
-interface Settings {
+export interface Settings {
   textOptions: GeneratorOptions;
+  preferredBankCode?: string;
+  theme?: "auto" | "light" | "dark";
+  /**
+   * Host patternleri ("banka.com.tr", "*.example.com"). Bu domainlerde
+   * Data Helper context menüsü sessizce yoksayılır.
+   */
+  blockedDomains?: string[];
 }
 
 const DEFAULT_SETTINGS: Settings = {
   textOptions: DEFAULT_TEXT_OPTIONS,
+  theme: "auto",
+  blockedDomains: [],
 };
 
-/**
- * Ayarları getir
- */
 export async function getSettings(): Promise<Settings> {
-  try {
-    const result = await chrome.storage.local.get(STORAGE_KEYS.SETTINGS);
-    const stored = result[STORAGE_KEYS.SETTINGS] as
-      | Partial<Settings>
-      | undefined;
-    return { ...DEFAULT_SETTINGS, ...(stored ?? {}) };
-  } catch {
-    const storedStr = localStorage.getItem(STORAGE_KEYS.SETTINGS);
-    const stored = storedStr
-      ? (JSON.parse(storedStr) as Partial<Settings>)
-      : {};
-    return { ...DEFAULT_SETTINGS, ...stored };
-  }
+  const stored = await adapter.get<Partial<Settings>>(STORAGE_KEYS.SETTINGS);
+  return { ...DEFAULT_SETTINGS, ...(stored ?? {}) };
 }
 
-/**
- * Ayarları kaydet
- */
 export async function setSettings(settings: Partial<Settings>): Promise<void> {
   const current = await getSettings();
   const updated = { ...current, ...settings };
+  await adapter.set(STORAGE_KEYS.SETTINGS, updated);
+}
 
-  try {
-    await chrome.storage.local.set({ [STORAGE_KEYS.SETTINGS]: updated });
-  } catch {
-    localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(updated));
+/**
+ * Favorileri + ayarları JSON olarak dışa aktar (backup / paylaşım).
+ */
+export async function exportAll(): Promise<string> {
+  const [favorites, settings] = await Promise.all([
+    getFavorites(),
+    getSettings(),
+  ]);
+  return JSON.stringify(
+    { version: 1, exportedAt: Date.now(), favorites, settings },
+    null,
+    2,
+  );
+}
+
+interface ExportPayload {
+  version?: number;
+  favorites?: FavoriteItem[];
+  settings?: Partial<Settings>;
+}
+
+/**
+ * JSON backup'tan favori + ayarları içe aktar. Hatalı payload'da throw eder.
+ */
+export async function importAll(json: string): Promise<void> {
+  const payload = JSON.parse(json) as ExportPayload;
+  if (Array.isArray(payload.favorites)) {
+    await setFavorites(payload.favorites);
+  }
+  if (payload.settings && typeof payload.settings === "object") {
+    await setSettings(payload.settings);
   }
 }

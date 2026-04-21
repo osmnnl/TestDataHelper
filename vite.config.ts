@@ -17,8 +17,8 @@ export default defineConfig(() => {
         input: {
           main: "index.html",
           popup: "popup.html",
+          sidepanel: "sidepanel.html",
           "service-worker": "src/background/service-worker.ts",
-          "content-script": "src/content/content-script.ts",
         },
       },
     },
