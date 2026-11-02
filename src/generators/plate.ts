@@ -19,8 +19,9 @@ function randomDigits(count: number): string {
   return out;
 }
 
-export function generatePlate(): string {
-  const city = PLATE_CITY_CODES[Math.floor(rng() * PLATE_CITY_CODES.length)];
+export function generatePlate(plateCode?: string): string {
+  const city =
+    plateCode ?? PLATE_CITY_CODES[Math.floor(rng() * PLATE_CITY_CODES.length)];
 
   // Patern dağılımı: 1 harf (4 rakam), 2 harf (3 veya 4 rakam), 3 harf (2 rakam)
   const pattern = rng();

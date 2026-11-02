@@ -11,7 +11,7 @@ import { rng } from "./random";
  * - 11. hane: (ilk 10 hane toplamı) mod 10
  */
 
-export function generateTCKN(): string {
+export function generateTCKN(prefix = ""): string {
   // İlk 9 haneyi rastgele üret (ilk hane 0 olamaz)
   const digits: number[] = [];
 
@@ -22,6 +22,9 @@ export function generateTCKN(): string {
   for (let i = 1; i < 9; i++) {
     digits.push(Math.floor(rng() * 10));
   }
+
+  // Ön ek (ör. yabancı kimlik no için "99") ilk haneleri sabitler
+  prefix.split("").forEach((c, i) => (digits[i] = Number(c)));
 
   // Tek pozisyondaki hanelerin toplamı (1, 3, 5, 7, 9. pozisyonlar - 0-indexed: 0, 2, 4, 6, 8)
   const oddSum = digits[0] + digits[2] + digits[4] + digits[6] + digits[8];
@@ -66,4 +69,9 @@ export function validateTCKN(tckn: string): boolean {
   const expectedDigit11 = sumFirst10 % 10;
 
   return digits[10] === expectedDigit11;
+}
+
+/** Yabancı Kimlik No (YKN): 99 ile başlar, TCKN algoritmasıyla geçerli. */
+export function generateForeignId(): string {
+  return generateTCKN("99");
 }

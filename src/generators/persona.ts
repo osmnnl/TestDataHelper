@@ -10,13 +10,11 @@ import {
   MALE_FIRST_NAMES,
   FEMALE_FIRST_NAMES,
   LAST_NAMES,
-  CITIES,
-  DISTRICTS,
   NEIGHBORHOODS,
   STREETS,
 } from "../data/names";
 import { KEP_DOMAINS } from "../data/kepProviders";
-import { generateTCKN } from "./tckn";
+import { generateTCKN, generateForeignId } from "./tckn";
 import { generateIBAN } from "./iban";
 import {
   generateCreditCard,
@@ -24,35 +22,61 @@ import {
   generateCardExpiry,
 } from "./creditCard";
 import { generatePlate } from "./plate";
-import { generatePostalCode } from "./postalCode";
 import { generatePassportNo } from "./documents";
+import {
+  pickPlace,
+  generateLandline,
+  generateSalary,
+  generatePurposeDates,
+  randomDateBetween,
+  type PurposeDates,
+} from "./workforce";
+import { PROVINCES } from "../data/provinces";
 
 export interface Persona {
   firstName: string;
   lastName: string;
   fullName: string;
   gender: "male" | "female";
+  motherName: string;
+  fatherName: string;
+  birthPlace: string;
+  /** DD.MM.YYYY */
   birthDate: string;
+  /** Amaçlı tarihler, YYYY-MM-DD */
+  dates: PurposeDates;
   tckn: string;
+  foreignId: string;
   email: string;
+  workEmail: string;
   kepEmail: string;
   username: string;
+  password: string;
   phone: string;
+  workPhone: string;
+  homePhone: string;
   iban: string;
   creditCard: string;
   cvv: string;
   cardExpiry: string;
+  salary: number;
   address: string;
   country: string;
   city: string;
   district: string;
   neighborhood: string;
+  /** "... Caddesi" */
+  avenue: string;
+  /** "... Sokak" */
   street: string;
   buildingNo: string;
   apartmentNo: string;
   postalCode: string;
+  plateCode: string;
   plate: string;
   passport: string;
+  jobTitle: string;
+  department: string;
 }
 
 function pick<T>(arr: readonly T[]): T {
@@ -94,13 +118,19 @@ function generatePersonaPhone(): string {
   return `0${prefix} ${rest.slice(0, 3)} ${rest.slice(3, 5)} ${rest.slice(5)}`;
 }
 
-function personaBirthDate(): string {
-  const now = new Date();
-  const age = 18 + Math.floor(rng() * 48);
-  const year = now.getFullYear() - age;
-  const month = 1 + Math.floor(rng() * 12);
-  const day = 1 + Math.floor(rng() * 28);
-  return `${String(day).padStart(2, "0")}.${String(month).padStart(2, "0")}.${year}`;
+const JOB_TITLES = ["Yazılım Uzmanı", "Muhasebe Uzmanı", "İnsan Kaynakları Uzmanı", "Satış Temsilcisi", "Üretim Operatörü", "Proje Yöneticisi", "Depo Sorumlusu", "Kalite Kontrol Uzmanı"];
+const DEPARTMENTS = ["Bilgi Teknolojileri", "Finans", "İnsan Kaynakları", "Satış", "Üretim", "Lojistik", "Kalite"];
+const PASSWORD_CHARS = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789";
+
+function personaPassword(): string {
+  let out = "";
+  for (let i = 0; i < 10; i++) out += PASSWORD_CHARS[Math.floor(rng() * PASSWORD_CHARS.length)];
+  return `${out}!${Math.floor(rng() * 90) + 10}`;
+}
+
+function toDisplayDate(iso: string): string {
+  const [y, m, d] = iso.split("-");
+  return `${d}.${m}.${y}`;
 }
 
 export function generatePersona(): Persona {
@@ -110,19 +140,33 @@ export function generatePersona(): Persona {
   );
   const lastName = pick(LAST_NAMES);
   const fullName = `${firstName} ${lastName}`;
+  let motherName = pick(FEMALE_FIRST_NAMES);
+  let fatherName = pick(MALE_FIRST_NAMES);
+  if (motherName === firstName) motherName = pick(FEMALE_FIRST_NAMES);
+  if (fatherName === firstName) fatherName = pick(MALE_FIRST_NAMES);
 
-  const city = pick(CITIES);
-  const districtPool = DISTRICTS[city] ?? Object.values(DISTRICTS).flat();
-  const district = pick(districtPool);
-  const neighborhood = pick(NEIGHBORHOODS);
-  const street = pick(STREETS);
+  const place = pickPlace();
+  const city = place.province.name;
+  const district = place.district.name;
+  const neighborhood = `${pick(NEIGHBORHOODS)} Mahallesi`;
+  const avenue = pick(STREETS.filter((x) => x.endsWith("Caddesi")));
+  const street = pick(STREETS.filter((x) => x.endsWith("Sokak")));
   const buildingNo = 1 + Math.floor(rng() * 150);
   const apartmentNo = 1 + Math.floor(rng() * 20);
+
+  const age = 20 + Math.floor(rng() * 40);
+  const now = new Date();
+  const birth = randomDateBetween(
+    new Date(now.getFullYear() - age, 0, 1),
+    new Date(now.getFullYear() - age, 11, 31),
+  );
+  const dates = generatePurposeDates(birth);
 
   const firstSlug = asciiSlug(firstName);
   const lastSlug = asciiSlug(lastName);
   const emailSuffix = Math.floor(rng() * 100);
   const email = `${firstSlug}.${lastSlug}${emailSuffix > 0 ? emailSuffix : ""}@example.com`;
+  const workEmail = `${firstSlug[0]}.${lastSlug}@sirket.com.tr`;
   const kepEmail = `${firstSlug}.${lastSlug}@${pick(KEP_DOMAINS)}`;
   const username = `${firstSlug}${lastSlug}${Math.floor(rng() * 1000)}`;
 
@@ -131,26 +175,40 @@ export function generatePersona(): Persona {
     lastName,
     fullName,
     gender,
-    birthDate: personaBirthDate(),
+    motherName,
+    fatherName,
+    birthPlace: rng() < 0.6 ? city : pick(PROVINCES).name,
+    birthDate: toDisplayDate(dates.birth),
+    dates,
     tckn: generateTCKN(),
+    foreignId: generateForeignId(),
     email,
+    workEmail,
     kepEmail,
     username,
+    password: personaPassword(),
     phone: generatePersonaPhone(),
+    workPhone: generateLandline(place.province.plate),
+    homePhone: generateLandline(place.province.plate),
     iban: generateIBAN(),
     creditCard: generateCreditCard("visa"),
     cvv: generateCVV(3),
     cardExpiry: generateCardExpiry(),
-    address: `${neighborhood} Mahallesi, ${street} No: ${buildingNo}, Daire: ${apartmentNo}, ${district}/${city}`,
+    salary: generateSalary(),
+    address: `${neighborhood}, ${avenue}, ${street} No: ${buildingNo} Daire: ${apartmentNo}, ${place.district.postalCode} ${district}/${city}`,
     country: "Türkiye",
     city,
     district,
-    neighborhood: `${neighborhood} Mahallesi`,
+    neighborhood,
+    avenue,
     street,
     buildingNo: String(buildingNo),
     apartmentNo: String(apartmentNo),
-    postalCode: generatePostalCode(),
-    plate: generatePlate(),
+    postalCode: place.district.postalCode,
+    plateCode: place.province.plate,
+    plate: generatePlate(place.province.plate),
     passport: generatePassportNo(),
+    jobTitle: pick(JOB_TITLES),
+    department: pick(DEPARTMENTS),
   };
 }

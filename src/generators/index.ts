@@ -3,16 +3,16 @@
  */
 
 // TC Kimlik No
-export { generateTCKN, validateTCKN } from "./tckn";
+export { generateTCKN, validateTCKN, generateForeignId } from "./tckn";
 
 // Vergi Kimlik No
-export { generateVKN } from "./taxNumber";
+export { generateVKN, validateVKN } from "./taxNumber";
 
 // SMMM No
 export { generateSMMMNo } from "./smmm";
 
 // IBAN
-export { generateIBAN, formatIBAN, TR_BANKS } from "./iban";
+export { generateIBAN, formatIBAN, validateIBAN, TR_BANKS } from "./iban";
 
 // Telefon
 export { generatePhone, formatPhone } from "./phone";
@@ -32,7 +32,7 @@ export {
 } from "./personal";
 
 // Firma / MERSIS
-export { generateCompanyName, generateMersisNo } from "./company";
+export { generateCompanyName, generateMersisNo, mersisFromVKN } from "./company";
 
 // Persona (tutarlı kişi)
 export { generatePersona, type Persona } from "./persona";
@@ -78,3 +78,20 @@ export {
   generateApartmentNo,
   generateFullAddress,
 } from "./address";
+
+// Şirket, ücret, amaçlı tarihler
+export {
+  MIN_WAGE_GROSS,
+  formatMoneyTR,
+  generateSalary,
+  generateCompany,
+  generateSgkWorkplaceNo,
+  formatSgkWorkplaceNo,
+  generateLandline,
+  pickPlace,
+  findProvince,
+  taxOfficeFor,
+  isoDate,
+  type Company,
+  type PurposeDates,
+} from "./workforce";

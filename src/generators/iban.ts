@@ -2,7 +2,7 @@ import { rng } from "./random";
 
 /**
  * Türk IBAN Generator
- * Format: TR + 2 kontrol hanesi + 5 banka kodu + 16 hesap no = 26 karakter
+ * Format: TR + 2 kontrol hanesi + 5 banka kodu + 1 rezerv hane (0) + 16 hesap no = 26 karakter
  *
  * IBAN kontrol hanesi hesaplaması:
  * 1. TR'yi 2927 olarak encode et (T=29, R=27)
@@ -54,14 +54,14 @@ export function generateIBAN(preferredBankCode?: string): string {
 
   // Kontrol hanesi hesaplama için string oluştur
   // Banka kodu + Hesap no + TR encode (2927) + 00
-  const checkString = bankCode + accountNumber + "292700";
+  const checkString = bankCode + "0" + accountNumber + "292700";
 
   // Kontrol hanesi hesapla
   const remainder = mod97(checkString);
   const checkDigits = (98 - remainder).toString().padStart(2, "0");
 
   // Final IBAN: TR + kontrol + banka + hesap
-  return `TR${checkDigits}${bankCode}${accountNumber}`;
+  return `TR${checkDigits}${bankCode}0${accountNumber}`;
 }
 
 /**
@@ -69,4 +69,12 @@ export function generateIBAN(preferredBankCode?: string): string {
  */
 export function formatIBAN(iban: string): string {
   return iban.replace(/(.{4})/g, "$1 ").trim();
+}
+
+/** IBAN doğrulama: TR, 26 karakter, mod 97 = 1. */
+export function validateIBAN(iban: string): boolean {
+  const v = iban.replace(/\s+/g, "").toUpperCase();
+  if (!/^TR\d{24}$/.test(v)) return false;
+  const moved = v.slice(4) + "2927" + v.slice(2, 4);
+  return mod97(moved) === 1;
 }

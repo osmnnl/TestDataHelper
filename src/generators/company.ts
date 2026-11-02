@@ -3,6 +3,7 @@
  */
 
 import { rng } from "./random";
+import { generateVKN } from "./taxNumber";
 import {
   COMPANY_PREFIXES,
   COMPANY_ROOTS,
@@ -23,12 +24,12 @@ export function generateCompanyName(): string {
   return `${core} ${pick(COMPANY_SECTORS)} ${pick(COMPANY_SUFFIXES)}`;
 }
 
-/**
- * MERSIS No (Merkezi Sicil Kayıt Sistemi) — 16 hane.
- * Gerçek algoritma kamuya açık olmadığından rastgele 16 hane üretir.
- */
+/** MERSİS: 0 + VKN + 5 hane (16 hane). */
+export function mersisFromVKN(vkn: string): string {
+  return `0${vkn}${pick(["00015", "00017", "00018", "00019"])}`;
+}
+
+/** MERSİS No — geçerli bir VKN'den türetilir. */
 export function generateMersisNo(): string {
-  let out = "";
-  for (let i = 0; i < 16; i++) out += Math.floor(rng() * 10).toString();
-  return out;
+  return mersisFromVKN(generateVKN());
 }
