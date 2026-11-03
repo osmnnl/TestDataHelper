@@ -22,35 +22,24 @@ There is no test runner configured.
 
 The project produces **two artifacts from one repo** via `@crxjs/vite-plugin` and a dual Rollup input config in `vite.config.ts`:
 
-1. **Chrome extension** (driven by `manifest.json`): popup + background service worker + content script.
+1. **Chrome extension** (driven by `manifest.json`): popup + side panel + background service worker + on-demand fill engine.
 2. **Landing page** (`index.html` → `src/landing/main.tsx`): marketing site hosted on GitHub Pages.
 
 Key boundaries to respect:
 
-- **`src/generators/`** — Pure, framework-free functions that produce test data. This is the single source of truth for all data generation (TCKN check digits, IBAN mod-97, phone prefixes, names from `src/data/names.ts`, etc.). All three entry points (popup, service worker, landing page) import from here via the barrel `src/generators/index.ts`. Never add React / Chrome API dependencies into this directory.
-- **`src/background/service-worker.ts`** — Registers the `contextMenus` tree on `onInstalled`, listens for clicks, calls the relevant generator, and `chrome.tabs.sendMessage` to the content script with the right `frameId`. The menu structure is driven by `src/background/data-config.ts` (`DATA_ITEMS_CONFIG`), which is also the canonical list tying a menu `id` → label → category → generator function. **When adding a new data type, you must update `DATA_ITEMS_CONFIG` or it will not appear in the context menu.**
-- **`src/content/content-script.ts`** — Tracks the last right-clicked `<input>`/`<textarea>`/`contenteditable` element (the `contextmenu` event fires before the menu is shown) and, on receiving a `FILL_INPUT` message, writes the value and dispatches `input`+`change` events so frameworks like React/Vue detect the change.
-- **`src/popup/`** — React 19 popup UI (`popup.html` → `src/popup/main.tsx` → `Popup.tsx`). Uses `src/components/`, `src/hooks/useClipboard.ts`, `src/hooks/useFavorites.ts` (backed by `src/storage/favorites.ts` → `chrome.storage`), and `src/data/dataItems.ts` for the category/items registry.
-- **`src/landing/`** — Standalone React app mounted via the root `index.html`. Independent from the extension runtime; safe to use browser-only APIs.
-- **`src/App.tsx`** — Vite starter leftover, not wired into either build input. Can be ignored or cleaned up; it is not the popup or landing entry.
-
-### Request flow for right-click → filled input
-
-```
-contextMenu click (service-worker)
-  → lookup DataItemConfig by id
-  → item.generator()        // from src/generators
-  → tabs.sendMessage({ type: "FILL_INPUT", value }, { frameId })
-  → content-script writes value into lastRightClickedElement
-  → dispatches input/change events for framework compatibility
-```
-
-### Build targets
-
-`vite.config.ts` declares four Rollup inputs: `index.html` (landing), `popup.html` (extension popup), `src/background/service-worker.ts`, and `src/content/content-script.ts`. The `crx({ manifest })` plugin wires the latter three into the MV3 manifest. `base` is `./` for the extension (relative paths required by Chrome) and `/TestDataHelper/` only when `BUILD_TARGET=pages`.
+- **`src/generators/`** — Pure, framework-free data generators (TCKN, VKN with GİB checksum, 26-char IBAN, MERSİS from VKN, SGK workplace no, il/ilçe/posta/plaka from `src/data/provinces.ts`, salary ≥ minimum wage, purpose dates). No React / Chrome API here.
+- **`src/shared/`** — Shared by service worker, engine and UI:
+  - `matcher.ts` — `classifyField(hints)` → `FieldKind` (Turkish normalization; label → autocomplete → placeholder → name → id).
+  - `values.ts` — `valueFor(kind, ctx)` maps a kind to the persona/company value.
+  - `catalog.ts` — the single registry of copyable/insertable items (popup rows, "Alana ekle" menu, bulk columns). **New data types go here.**
+  - `bulk.ts` — CSV (BOM, `;`) and XLSX (in-repo store zip + CRC32).
+- **`src/content/engine.ts`** — Fill engine. Not a static content script: built as an IIFE to `public/engine.js` by `scripts/build-engine.mjs` and injected on demand with `chrome.scripting.executeScript` (activeTab). Exposes `window.__dataHelper.run({mode, ctx, text, targeted})`; modes `form | preview | field | insert | option | undo | copy | probe`. Fills only the container around the clicked/focused element, handles custom comboboxes, masks, date formats, verify + undo, and draws its toast/preview UI in a shadow root.
+- **`src/background/service-worker.ts`** — Persona/company state (`dh.*` in storage), `runInTab` (inject + run, blocked domains, lock/used regeneration), context menu (built once), commands `fill-form` / `fill-field`, and messages `dh:*` from the UI. `globalThis.dataHelper` is exposed for e2e tests.
+- **`src/app/`** — One React UI (`App.tsx`, `BulkPanel.tsx`) rendered by both `src/popup/main.tsx` (400×596, must stay ≤600px) and `src/sidepanel/main.tsx`. Side-panel fill needs `optional_host_permissions`, requested from the UI.
+- **`src/landing/`** — Standalone landing page; independent from the extension runtime.
 
 ## Conventions
 
 - Data lists (names, cities, street names, etc.) live in `src/data/` and are imported by generators — keep static data out of generator modules themselves.
-- When you add a new generator, export it from `src/generators/index.ts` **and** register it in `src/background/data-config.ts` (for the context menu) **and** in `src/data/dataItems.ts` (for the popup UI) — these three registries are not auto-synced.
-- `manifest.json` permissions are intentionally minimal (`storage`, `contextMenus`). The README claims `activeTab` / `scripting` but the actual manifest does not use them; the content script is declared statically via `content_scripts` with `<all_urls>`. Don't add permissions without reason.
+- When you add a new generator, export it from `src/generators/index.ts`, add a `CATALOG` entry in `src/shared/catalog.ts`, and if forms should fill it, a `FieldKind` rule in `matcher.ts` + a case in `values.ts`.
+- No new npm dependencies. Permissions stay minimal (`activeTab`, `scripting`, `storage`, `contextMenus`, `sidePanel`; `<all_urls>` only as optional).
