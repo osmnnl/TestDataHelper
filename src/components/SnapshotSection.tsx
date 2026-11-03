@@ -223,7 +223,7 @@ export function SnapshotSection({ onStatus }: SnapshotSectionProps) {
                   📂
                 </button>
                 <button type="button" onClick={() => handleDelete(s.id)}>
-                  🗑
+                  Sil
                 </button>
               </div>
             </li>

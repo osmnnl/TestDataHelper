@@ -10,7 +10,7 @@ import { decodePersona } from "../storage/share";
 import { SnapshotSection } from "./SnapshotSection";
 import "./SettingsModal.css";
 
-const PERSONA_KEY = "currentPersona";
+const PERSONA_KEY = "dh.persona";
 
 interface SettingsModalProps {
   open: boolean;
@@ -40,9 +40,9 @@ export function SettingsModal({ open, onClose, onChange }: SettingsModalProps) {
   const importPersonaCode = async () => {
     try {
       const persona = decodePersona(personaCode);
-      await chrome.storage.session.set({ [PERSONA_KEY]: persona });
+      await chrome.storage.local.set({ [PERSONA_KEY]: persona });
       setPersonaCode("");
-      setStatus("✓ Persona yüklendi. Persona sekmesini yeniden aç.");
+      setStatus("✓ Persona yüklendi.");
       onChange?.();
     } catch (e) {
       setStatus(e instanceof Error ? `✕ ${e.message}` : "✕ Geçersiz kod");
@@ -186,7 +186,7 @@ export function SettingsModal({ open, onClose, onChange }: SettingsModalProps) {
           <p>Oturum geçmişini şimdi temizle (tarayıcıyı kapatınca da silinir).</p>
           <div className="settings-actions">
             <button type="button" onClick={handleClearHistory}>
-              🗑 Geçmişi Temizle
+              Geçmişi temizle
             </button>
           </div>
         </section>

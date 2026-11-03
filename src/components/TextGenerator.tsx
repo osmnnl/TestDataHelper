@@ -115,7 +115,7 @@ export function TextGenerator({ onCopy }: TextGeneratorProps) {
 
       <div className="text-generator-actions">
         <button className="generate-btn" onClick={handleGenerate}>
-          ⚡ Üret
+          Üret
         </button>
         <button
           className="copy-text-btn"
@@ -152,7 +152,7 @@ export function TextGenerator({ onCopy }: TextGeneratorProps) {
       </div>
       <div className="text-generator-actions">
         <button className="generate-btn" onClick={handlePatternGenerate}>
-          ⚡ Üret
+          Üret
         </button>
         <button
           className="copy-text-btn"
