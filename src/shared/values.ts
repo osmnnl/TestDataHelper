@@ -71,6 +71,9 @@ export function valueFor(kind: FieldKind, ctx: FillContext, label = ""): FieldVa
     case "tckn": return { text: p.tckn };
     case "foreignId": return { text: p.foreignId };
     case "passport": return { text: p.passport };
+    case "driverLicenseClass": return { text: p.driverLicenseClass, optionHints: [p.driverLicenseClass] };
+    case "driverLicenseNo": return { text: p.driverLicenseNo };
+    case "smmmNo": return { text: p.smmmNo };
     case "sgkNo": return { text: p.tckn };
     case "email": return { text: p.email };
     case "workEmail": return { text: p.workEmail };

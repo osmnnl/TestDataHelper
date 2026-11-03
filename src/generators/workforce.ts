@@ -69,11 +69,13 @@ export function taxOfficeFor(place: Place): string {
  * SGK işyeri sicil no — 26 hane:
  * M(1) işkolu(4) ünite(2) eski ünite(2) sıra(7) il(3) ilçe(2) kontrol(2) aracı(3)
  */
-export function generateSgkWorkplaceNo(plate?: string): string {
+export function generateSgkWorkplaceNo(plate?: string, nace?: string): string {
   const il = `0${plate ?? pick(PROVINCES).plate}`;
+  // İşkolu kodu: NACE Rev.2 sınıfının ilk 4 hanesi
+  const iskolu = nace ? nace.replace(/\D/g, "").slice(0, 4) : digits(4);
   return [
     pick(["1", "2", "4"]),
-    digits(4),
+    iskolu,
     "01",
     "01",
     digits(7),
@@ -91,23 +93,35 @@ export function formatSgkWorkplaceNo(no: string): string {
   return parts.map((n) => no.slice(i, (i += n))).join(" ");
 }
 
-const AREA_CODES: Record<string, string[]> = {
-  "34": ["212", "216"],
-  "06": ["312"],
-  "35": ["232"],
-  "16": ["224"],
-  "07": ["242"],
-  "01": ["322"],
-  "41": ["262"],
-  "42": ["332"],
-  "27": ["342"],
-  "55": ["362"],
+/** İl plakası → sabit hat alan kodu (İstanbul ilçeye göre 212/216). */
+const AREA_CODES: Record<string, string> = {
+  "01": "322", "02": "416", "03": "272", "04": "472", "05": "358", "06": "312",
+  "07": "242", "08": "466", "09": "256", "10": "266", "11": "228", "12": "426",
+  "13": "434", "14": "374", "15": "248", "16": "224", "17": "286", "18": "376",
+  "19": "364", "20": "258", "21": "412", "22": "284", "23": "424", "24": "446",
+  "25": "442", "26": "222", "27": "342", "28": "454", "29": "456", "30": "438",
+  "31": "326", "32": "246", "33": "324", "35": "232", "36": "474", "37": "366",
+  "38": "352", "39": "288", "40": "386", "41": "262", "42": "332", "43": "274",
+  "44": "422", "45": "236", "46": "344", "47": "482", "48": "252", "49": "436",
+  "50": "384", "51": "388", "52": "452", "53": "464", "54": "264", "55": "362",
+  "56": "484", "57": "368", "58": "346", "59": "282", "60": "356", "61": "462",
+  "62": "428", "63": "414", "64": "276", "65": "432", "66": "354", "67": "372",
+  "68": "382", "69": "458", "70": "338", "71": "318", "72": "488", "73": "486",
+  "74": "378", "75": "478", "76": "476", "77": "226", "78": "370", "79": "348",
+  "80": "328", "81": "380",
 };
 
+const ISTANBUL_ASIAN = new Set([
+  "Adalar", "Ataşehir", "Beykoz", "Çekmeköy", "Kadıköy", "Kartal", "Maltepe",
+  "Pendik", "Sancaktepe", "Sultanbeyli", "Şile", "Tuzla", "Ümraniye", "Üsküdar",
+]);
+
 /** Sabit hat: ilin alan koduyla "0212 345 67 89". */
-export function generateLandline(plate?: string): string {
-  const area = (plate && AREA_CODES[plate] ? pick(AREA_CODES[plate]) : null) ??
-    pick(["212", "216", "312", "232", "850"]);
+export function generateLandline(plate?: string, district?: string): string {
+  const area =
+    plate === "34"
+      ? (district ? (ISTANBUL_ASIAN.has(district) ? "216" : "212") : pick(["212", "216"]))
+      : (plate && AREA_CODES[plate]) || pick(["212", "216", "312", "232"]);
   const n = digits(7);
   return `0${area} ${n.slice(0, 3)} ${n.slice(3, 5)} ${n.slice(5)}`;
 }
@@ -151,10 +165,10 @@ export function generateCompany(): Company {
     vkn,
     mersis: mersisFromVKN(vkn),
     taxOffice: taxOfficeFor(place),
-    sgkWorkplaceNo: generateSgkWorkplaceNo(place.province.plate),
+    sgkWorkplaceNo: generateSgkWorkplaceNo(place.province.plate, nace.code),
     nace: nace.code,
     naceTitle: nace.title,
-    phone: generateLandline(place.province.plate),
+    phone: generateLandline(place.province.plate, place.district.name),
     email: `info@${domain}`,
     website: `https://www.${domain}`,
     kepEmail: `${slug(name.split(" ")[0])}@hs01.kep.tr`,
@@ -200,10 +214,15 @@ export function generatePurposeDates(birth: Date): PurposeDates {
   const hireFrom = new Date(Math.max(adult.getTime(), new Date(2012, 0, 1).getTime()));
   const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
   const hire = randomDateBetween(hireFrom, lastMonth);
-  const exit = randomDateBetween(
-    new Date(hire.getFullYear(), hire.getMonth() + 3, 1),
-    new Date(today.getFullYear(), today.getMonth() + 2, 1),
-  );
+  // Çıkış: işe girişten sonra, bugünden önce
+  const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+  const exitFrom = new Date(Math.min(
+    new Date(hire.getFullYear(), hire.getMonth() + 3, 1).getTime(),
+    yesterday.getTime(),
+  ));
+  let exit = randomDateBetween(exitFrom, yesterday);
+  if (exit <= hire) exit = new Date(hire.getFullYear(), hire.getMonth(), hire.getDate() + 1);
+  if (exit > yesterday) exit = yesterday;
   const leaveStart = randomDateBetween(
     new Date(today.getFullYear(), today.getMonth() + 1, 1),
     new Date(today.getFullYear(), today.getMonth() + 3, 1),
@@ -217,7 +236,7 @@ export function generatePurposeDates(birth: Date): PurposeDates {
   return {
     birth: isoDate(birth),
     hire: isoDate(hire),
-    exit: isoDate(exit < hire ? hire : exit),
+    exit: isoDate(exit),
     leaveStart: isoDate(leaveStart),
     leaveEnd: isoDate(leaveEnd),
     validUntil: isoDate(validUntil),

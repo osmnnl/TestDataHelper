@@ -55,7 +55,9 @@ function turkishToAscii(text: string): string {
   return text
     .split("")
     .map((char) => map[char] || char)
-    .join("");
+    .join("")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
 }
 
 /**

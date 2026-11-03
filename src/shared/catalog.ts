@@ -62,6 +62,10 @@ export const CATALOG: readonly CatalogItem[] = [
   { id: "username", label: "Kullanıcı Adı", tab: "person", get: (c) => c.persona.username },
   { id: "password", label: "Şifre", tab: "person", get: (c) => c.persona.password },
   { id: "passport", label: "Pasaport No", tab: "person", get: (c) => c.persona.passport },
+  { id: "sgk", label: "SGK Sicil No", tab: "person", get: (c) => c.persona.tckn, check: () => "= TCKN" },
+  { id: "driverLicense", label: "Ehliyet Sınıfı", tab: "person", get: (c) => c.persona.driverLicenseClass },
+  { id: "driverLicenseNo", label: "Ehliyet No", tab: "person", get: (c) => c.persona.driverLicenseNo },
+  { id: "smmm", label: "SMMM Sicil No", tab: "person", get: (c) => c.persona.smmmNo },
   { id: "jobTitle", label: "Görev / Unvan", tab: "person", get: (c) => c.persona.jobTitle },
   { id: "department", label: "Departman", tab: "person", get: (c) => c.persona.department },
 

@@ -11,6 +11,7 @@ export type FieldKind =
   | "firstName" | "lastName" | "fullName" | "motherName" | "fatherName"
   | "birthPlace" | "gender" | "maritalStatus" | "nationality" | "age"
   | "tckn" | "foreignId" | "passport" | "sgkNo"
+  | "driverLicenseClass" | "driverLicenseNo" | "smmmNo"
   | "email" | "workEmail" | "kepEmail" | "username" | "password"
   | "phone" | "workPhone" | "homePhone" | "countryCode"
   | "birthDate" | "hireDate" | "exitDate" | "leaveStart" | "leaveEnd"
@@ -57,6 +58,9 @@ const RULES: Rule[] = [
   ["birthPlace", /\bdogum yeri|birth ?place|place of birth/],
   ["foreignId", /yabanci kimlik|\bykn\b|foreign id|foreigner/],
   ["mersis", /\bmersis/],
+  ["smmmNo", /\bsmmm\b|mali musavir|muhasebeci sicil/],
+  ["driverLicenseNo", /(ehliyet|surucu belgesi?) (no|numara|belge no)|licen[cs]e (no|number)/],
+  ["driverLicenseClass", /ehliyet|surucu belge|driver.?s? licen[cs]e/],
   ["sgkWorkplaceNo", /isyeri sicil|sgk isyeri|isyeri (no|numara)|workplace (no|number)/],
   ["taxOffice", /vergi dairesi|\bv ?d\b|tax office/],
   ["vkn", /vergi (kimlik )?(no|numara)|\bvkn\b|tax (id|number|no)/],
@@ -172,6 +176,7 @@ export const KIND_LABELS: Record<FieldKind, string> = {
   fatherName: "Baba adı", birthPlace: "Doğum yeri", gender: "Cinsiyet",
   maritalStatus: "Medeni hal", nationality: "Uyruk", age: "Yaş", tckn: "TC kimlik no",
   foreignId: "Yabancı kimlik no", passport: "Pasaport no", sgkNo: "SGK sicil no",
+  driverLicenseClass: "Ehliyet sınıfı", driverLicenseNo: "Ehliyet no", smmmNo: "SMMM sicil no",
   email: "E-posta", workEmail: "İş e-postası", kepEmail: "KEP adresi",
   username: "Kullanıcı adı", password: "Şifre", phone: "Cep telefonu",
   workPhone: "İş telefonu", homePhone: "Ev telefonu", countryCode: "Ülke kodu",

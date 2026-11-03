@@ -22,7 +22,8 @@ import {
   generateCardExpiry,
 } from "./creditCard";
 import { generatePlate } from "./plate";
-import { generatePassportNo } from "./documents";
+import { generatePassportNo, generateDriverLicenseClass, generateDriverLicenseNo } from "./documents";
+import { generateSMMMNo } from "./smmm";
 import {
   pickPlace,
   generateLandline,
@@ -73,6 +74,10 @@ export interface Persona {
   apartmentNo: string;
   postalCode: string;
   plateCode: string;
+  driverLicenseClass: string;
+  driverLicenseNo: string;
+  /** SMMM ruhsat sicil no, 5 hane */
+  smmmNo: string;
   plate: string;
   passport: string;
   jobTitle: string;
@@ -103,6 +108,8 @@ function asciiSlug(text: string): string {
     .split("")
     .map((c) => TURKISH_TO_ASCII[c] ?? c)
     .join("")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .replace(/\s+/g, "");
 }
@@ -188,8 +195,8 @@ export function generatePersona(): Persona {
     username,
     password: personaPassword(),
     phone: generatePersonaPhone(),
-    workPhone: generateLandline(place.province.plate),
-    homePhone: generateLandline(place.province.plate),
+    workPhone: generateLandline(place.province.plate, place.district.name),
+    homePhone: generateLandline(place.province.plate, place.district.name),
     iban: generateIBAN(),
     creditCard: generateCreditCard("visa"),
     cvv: generateCVV(3),
@@ -208,6 +215,9 @@ export function generatePersona(): Persona {
     plateCode: place.province.plate,
     plate: generatePlate(place.province.plate),
     passport: generatePassportNo(),
+    driverLicenseClass: rng() < 0.7 ? "B" : generateDriverLicenseClass(),
+    driverLicenseNo: generateDriverLicenseNo(),
+    smmmNo: generateSMMMNo(),
     jobTitle: pick(JOB_TITLES),
     department: pick(DEPARTMENTS),
   };
