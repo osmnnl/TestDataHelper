@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
-    "build:ext": "tsc -b && vite build",
-    "build:pages": "BUILD_TARGET=pages tsc -b && BUILD_TARGET=pages vite build",
+    "build": "node scripts/build-engine.mjs && tsc -b && vite build",
+    "build:ext": "node scripts/build-engine.mjs && tsc -b && vite build",
+    "build:pages": "node scripts/build-engine.mjs && BUILD_TARGET=pages tsc -b && BUILD_TARGET=pages vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
