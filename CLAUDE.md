@@ -23,7 +23,7 @@ There is no test runner configured.
 The project produces **two artifacts from one repo** via `@crxjs/vite-plugin` and a dual Rollup input config in `vite.config.ts`:
 
 1. **Chrome extension** (driven by `manifest.json`): popup + side panel + background service worker + on-demand fill engine.
-2. **Landing page** (`index.html` → `src/landing/main.tsx`): marketing site hosted on GitHub Pages.
+2. **Landing page** (`index.html` + `src/landing/landing.{css,ts}`, static EN/TR): marketing site hosted on GitHub Pages.
 
 Key boundaries to respect:
 
