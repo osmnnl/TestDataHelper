@@ -166,7 +166,10 @@ function labelFor(el: Element): string {
   }
   const wrap = el.closest("label");
   if (wrap) {
-    const t = textOf(wrap);
+    // Saran label'ın kendi metni: içindeki liste seçenekleri ve alan değerleri hariç
+    const own = wrap.cloneNode(true) as Element;
+    own.querySelectorAll("select, option, input, textarea, button, [role='listbox'], [role='option']").forEach((n) => n.remove());
+    const t = textOf(own);
     if (t && t.length < 80) return t;
   }
   const legend = el.closest("fieldset")?.querySelector(":scope > legend");
