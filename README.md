@@ -1,154 +1,66 @@
-# Data Helper - Chrome Extension
+# Data Helper
 
-<div align="center">
-  <img src="public/icons/icon128.png" alt="Data Helper" width="128" height="128">
-  <h3>Test Data Generator for Chrome Browser</h3>
-  <p>Turkish-locale fake data: TCKN, IBAN, credit card, plate, address, company, passport — all locally in your browser</p>
+<p align="center">
+  <img src="public/icons/icon128.png" alt="Data Helper" width="96" height="96">
+</p>
 
-  <p>
-    <a href="https://chromewebstore.google.com/detail/data-helper/hboimhjgdphpokonjindjhgoihkmboli" target="_blank">
-      <img src="https://img.shields.io/badge/🚀_Install-Chrome_Web_Store-green?style=for-the-badge&logo=google-chrome" alt="Install from Chrome Web Store">
-    </a>
-    <a href="https://osmnnl.github.io/TestDataHelper/" target="_blank">
-      <img src="https://img.shields.io/badge/🌐_Visit-Website-blue?style=for-the-badge&logo=github-pages" alt="Visit Website">
-    </a>
-    <a href="https://github.com/osmnnl/TestDataHelper" target="_blank">
-      <img src="https://img.shields.io/badge/⭐_Star-Repository-yellow?style=for-the-badge&logo=github" alt="Star Repository">
-    </a>
-  </p>
-</div>
+Turkish test data and one-click form filling for Chrome. Valid TCKN, VKN and IBAN; one consistent person and company; fill the form you are on with preview and undo; bulk CSV / XLSX. Everything runs in your browser.
 
-## ✨ Features
+[Chrome Web Store](https://chromewebstore.google.com/detail/data-helper/hboimhjgdphpokonjindjhgoihkmboli) · [Website](https://osmnnl.github.io/TestDataHelper/) · [Privacy](PRIVACY.md) · [Issues](https://github.com/osmnnl/TestDataHelper/issues)
 
-### Generation
-- **30+ data types**: TCKN, VKN, IBAN (16 banks), credit card with Luhn + CVV + expiry, MERSIS, SMMM, SGK, KEP email, phone, address, plate, postal code, passport, driver's license, company name, and more
-- **🧑 Persona mode** — generate a single coherent identity where TCKN, name, email, IBAN, credit card, address and every other field all match the same fictional person
-- **🎲 Deterministic seed** — same seed → same persona; reproducible test data for regression testing
-- **🧩 Regex custom patterns** — `[A-Z]{3}-\d{5}` style custom IDs/SKUs
-- **⬇ Bulk CSV export** — 25-persona CSV in one click
-- **🔗 Persona share code** — `dhp:v1:…` base64 shareable persona (no server)
+<p align="center">
+  <img src="public/site/img/popup-person.png" alt="Data Helper popup" width="320">
+  <img src="public/site/img/filled-both.png" alt="A form filled by Data Helper" width="480">
+</p>
 
-### Fill
-- **Right-click menu** — on `<input>`, `<textarea>`, `<select>`, `contenteditable`
-- **⚡ Smart form fill** — scans the page, heuristically matches labels/names/placeholders to persona fields, fills them all
-- **📌 Smart autofill (single field)** — detects the most likely data type for the focused input and fills it
-- **🎲 Random option on selects** — one-click random choice on native `<select>`
-- **🖱️ Drag-to-fill** — drag any data card onto a page input (native browser drop)
-- **💾 Form snapshot / replay** — capture the form state on a URL, restore it later (per-origin)
+## What it does
 
-### UI / UX
-- **Side Panel** — persistent panel with smart-fill button for the active tab
-- **Popup search** — `/` shortcut to filter data cards by label
-- **Keyboard shortcut** — `Ctrl+Shift+D` (macOS: `Cmd+Shift+D`) opens the popup
-- **Drag-to-reorder favorites** — native HTML5 drag-drop
-- **Session history** — last 20 generated values, accessible from popup
-- **Automatic dark mode** — `prefers-color-scheme` with full CSS token system
-- **Action badge** — short code of the latest generated value
+- **Fills the form you are on.** Click into a form and press `Ctrl+Shift+F` (Mac: `⌘⇧F`). Only that form is filled; the rest of the page is left alone. `Alt+Shift+F` fills the focused field.
+- **Recognises the field.** Reads the label, legend, aria-label and placeholder, in Turkish or English. Mother's name, father's name and company name each get their own value. Custom dropdowns, input masks and date formats are handled.
+- **Preview and undo.** The preview lists every field found and the value it will write; one click undoes the last fill.
+- **One consistent person.** Name, TCKN, e-mail, phone, IBAN, address and dates belong to the same fictional person; city, district, postal code and area code agree. Lock the person to keep it across fills.
+- **Data that passes validation.** Over 60 data types in four groups (person, company, finance, address/date/text), with search and favorites. TCKN and VKN check digits, IBAN mod 97, card numbers with Luhn.
+- **Bulk.** Any number of people as CSV or XLSX, with the columns you choose, in the order you choose.
+- **Right-click menu.** Fill one field, fill the form, insert a specific value or pick an option from a list.
+- **Side panel**, light and dark theme, Turkish interface.
 
-### Privacy
-- **No `<all_urls>` content script** — pure on-demand injection via `chrome.scripting.executeScript`
-- **Domain blacklist** — glob patterns (`*.banka.com.tr`) that disable the extension on sensitive sites
-- **`storage.sync` → `local` → `localStorage` fallback** — favorites sync across devices; extension is fully offline
-
-## 📦 Supported Data Types
-
-| 💳 Financial / Business | 👤 Personal | 📍 Address & Docs | 📝 Text |
-|---|---|---|---|
-| TC Kimlik No | Ad / Soyad / Ad Soyad | Tam Adres | 50 / 100 / 250 / 500 char |
-| Vergi Kimlik No | E-posta | Ülke | Lorem Ipsum |
-| IBAN (16 banka) | KEP E-posta | İl / İlçe | **Regex pattern** (özel) |
-| SGK Sicil No | Kullanıcı Adı | Mahalle / Cadde / Sokak |  |
-| SMMM Sicil No | Telefon (GSM) | Bina No / Daire No |  |
-| MERSIS No | Doğum Tarihi | Posta Kodu |  |
-| Firma Adı |  | Plaka |  |
-| Kredi Kartı (Luhn) |  | Ehliyet Sınıfı + No |  |
-| CVV / Son Kullanma |  | Pasaport No |  |
-
-## 🚀 Installation
-
-### From Chrome Web Store (Recommended)
-
-**[👉 Install Data Helper](https://chromewebstore.google.com/detail/data-helper/hboimhjgdphpokonjindjhgoihkmboli)**
-
-### Manual (Developer Mode)
+## Install from source
 
 ```bash
 git clone https://github.com/osmnnl/TestDataHelper.git
 cd TestDataHelper
-npm install
+npm ci
 npm run build
 ```
 
-Then in Chrome:
-1. Go to `chrome://extensions/` and enable **Developer mode**
-2. Click **Load unpacked** and select the `dist/` folder
+Load `dist/` as an unpacked extension in `chrome://extensions/` (Developer mode). Works in Chrome, Edge, Brave and other Chromium browsers (Chrome 114+).
 
-## 📖 Usage
-
-### Right-Click (most common)
-1. Right-click any input / select / contenteditable
-2. `Data Helper` → pick category → pick data type, **or**
-3. `Data Helper → ⚡ Bu formu persona ile doldur` to fill the entire form, **or**
-4. `Data Helper → 📌 Akıllı doldur` to auto-detect the data type for the focused field
-
-### Popup
-Click the toolbar icon (or `Ctrl+Shift+D`):
-- **Persona** tab — view/regenerate the consistent identity, copy fields individually, export as JSON or CSV, use a seed for reproducible output
-- **Favoriler / Finansal / Kişisel / Metin / Geçmiş** — browse, filter (`/`), copy, favorite
-- **⚙ Ayarlar** — JSON backup/restore, domain blacklist, persona share-code import, form snapshots
-
-### Side Panel
-Click `⇨` in the popup header to promote the UI to a persistent side panel with a top-level "⚡ Fill this tab's form" button.
-
-## ⚙️ Technical Details
-
-### Stack
-- **Frontend**: React 19 + TypeScript + Vite
-- **Extension**: Chrome Manifest V3 (service worker, no background page)
-- **Styling**: Vanilla CSS with a light/dark token system
-
-### Permissions
+## Permissions
 
 | Permission | Why |
 |---|---|
-| `storage` | Persist favorites, settings, session history — all local |
-| `contextMenus` | Add the "Data Helper" right-click menu |
-| `activeTab` | Write generated data into the currently active tab — only when the user clicks a menu item |
-| `scripting` | One-shot fill function injection on user action |
-| `sidePanel` | Open the persistent side panel UI (Chrome 114+) |
+| `activeTab` | Fill the tab you are using, only when you ask (button, shortcut, right-click) |
+| `scripting` | Load the fill engine into that tab at that moment. The engine ships inside the extension; no remote code |
+| `storage` | Current person, favorites, settings, bulk templates |
+| `contextMenus` | The "Data Helper" right-click menu |
+| `sidePanel` | Open Data Helper in the side panel |
+| `<all_urls>` (optional) | Asked per site, only when you fill from the side panel |
 
-**No** `<all_urls>` content script, **no** host_permissions, **no** remote code.
+No content script runs on any page in the background. No server, no analytics, no tracking. All generated values are fake and for testing only. See [PRIVACY.md](PRIVACY.md).
 
-## 🔒 Security & Privacy
+## Development
 
-- All data is generated **locally** — no network calls, no analytics, no tracking
-- Credit card numbers pass the Luhn checksum but are **not tied to real accounts** — test-only
-- Right-click menu injection is **user-gesture triggered** via `activeTab`
-- Domain blacklist lets you disable the extension entirely on sensitive hosts (banking, healthcare) — glob syntax: `*.banka.com.tr`
-- See [PRIVACY.md](PRIVACY.md) for full policy
+- `npm run dev` — Vite dev server (landing page)
+- `npm run build` — type-check and build the extension into `dist/`
+- `npm run build:pages` — build the GitHub Pages site
+- `npm run lint` — ESLint
 
-## 📝 License
+React 19, TypeScript, Vite, Manifest V3. No runtime dependencies beyond React.
 
-MIT — see [LICENSE](LICENSE).
+## License
 
-## 🤝 Contributing
+MIT
 
-1. Fork this repo
-2. Create a feature branch (`git checkout -b feature/new-feature`)
-3. Commit your changes
-4. Push and open a Pull Request
+## Contact
 
-## 🐛 Bug Reports
-
-[GitHub Issues](https://github.com/osmnnl/TestDataHelper/issues)
-
-## 📞 Contact
-
-- **Developer**: [GitHub](https://github.com/osmnnl)
-- **Email**: osmnnldev@gmail.com
-
----
-
-<div align="center">
-  <p>⭐ Star the project if you find it useful!</p>
-</div>
+[GitHub Issues](https://github.com/osmnnl/TestDataHelper/issues) · osmnnldev@gmail.com
