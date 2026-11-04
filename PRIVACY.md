@@ -1,66 +1,93 @@
-# Gizlilik Politikası - Data Helper
+# Gizlilik Politikası · Data Helper
 
-**Son güncelleme:** 21 Nisan 2026
+**Son güncelleme:** 4 Kasım 2026 · sürüm 2.0.0
 
-## Genel Bakış
+*English version below.*
 
-Data Helper, yazılım test süreçlerinde kullanılmak üzere sahte (fake) veri üreten bir Chrome uzantısıdır. Kullanıcı gizliliğini en üst düzeyde önemsiyoruz.
+## Kısaca
 
-## Veri Toplama
+Data Helper hiçbir kişisel veri toplamaz, hiçbir sunucuya veri göndermez, analitik ya da izleme kullanmaz. Ürettiği her değer sahte test verisidir. Her şey tarayıcınızda çalışır.
 
-Data Helper uzantısı **hiçbir kişisel veri toplamaz, saklamaz veya üçüncü taraflarla paylaşmaz.**
+## Saklanan bilgiler
 
-Uzantımız:
-- ❌ Kişisel bilgilerinizi toplamaz
-- ❌ Tarama geçmişinizi izlemez
-- ❌ Hiçbir sunucuya veri göndermez
-- ❌ Analitik veya izleme araçları kullanmaz
-- ❌ Üçüncü taraf servislerle iletişim kurmaz
-- ❌ Sayfalarınıza kalıcı content-script enjekte etmez
+Data Helper yalnız şunları, yalnız sizin tarayıcınızda saklar:
 
-## Yerel Depolama
+| Ne | Nerede | Ne zaman silinir |
+|----|--------|------------------|
+| Geçerli kişi ve şirket (sahte), kilit durumu | `chrome.storage.local` | Eklentiyi kaldırınca ya da "Yeni" deyince |
+| Favoriler ve ayarlar (tema, gizli siteler) | `chrome.storage.sync`; kota dolarsa `chrome.storage.local` | Eklentiyi kaldırınca |
+| Toplu dosya şablonları | `chrome.storage.local` | Eklentiyi kaldırınca |
+| Son kopyalananlar ve son doldurma özeti (geri alma için) | `chrome.storage.session` | Tarayıcı kapanınca |
 
-Uzantı yalnızca aşağıdaki bilgileri **yerel olarak (cihazınızda)** saklar:
+`chrome.storage.sync` kullanıldığında favori ve ayarlarınız, aynı Google hesabıyla oturum açtığınız Chrome'lar arasında Google tarafından eşitlenir. Data Helper'ın kendi sunucusu yoktur.
 
-- Favori olarak işaretlediğiniz veri tipleri ve sıralaması
-- Kullanıcı ayarları (tema, tercih edilen banka vb.)
-- Son üretilen değerlerin oturum geçmişi (`chrome.storage.session`; tarayıcıyı kapatınca silinir)
-- Aktif "Persona" (oturum boyunca kalıcı; tarayıcıyı kapatınca silinir)
+Data Helper doldurduğu sayfalardaki içeriği okumaz, kaydetmez, göndermez. Formu doldururken yalnız alan etiketlerine bakarak hangi alana ne yazılacağına karar verir; bu bilgi sayfadan çıkmaz.
 
-Favori ve ayarlar öncelikli olarak `chrome.storage.sync` ile (aynı Google hesabıyla giriş yaptığınız diğer Chrome cihazlarıyla senkronize olur), kota dolarsa `chrome.storage.local`'a düşerek saklanır. Hiçbiri Data Helper'ın kendi sunucularına gönderilmez; senkronizasyon tamamen Google altyapısı üzerinden gerçekleşir.
+## İzinler
 
-## Kullanılan İzinler
+| İzin | Neden |
+|------|-------|
+| `activeTab` | Siz istediğinizde (düğme, kısayol, sağ tık) yalnız kullandığınız sekmedeki formu doldurmak |
+| `scripting` | Doldurma motorunu o sekmeye o an, tek seferlik yüklemek. Uzak kod çalıştırılmaz; motor eklenti paketinin içindedir |
+| `storage` | Yukarıdaki tablodaki bilgileri saklamak |
+| `contextMenus` | Sağ tık menüsüne "Data Helper" girdisini eklemek |
+| `sidePanel` | Data Helper'ı yan panelde açabilmek |
+| `<all_urls>` (isteğe bağlı) | Yalnız yan panelden doldurmak istediğinizde, o site için ayrıca sorulur. Vermezseniz eklenti yine çalışır |
 
-| İzin | Kullanım Amacı |
-|------|----------------|
-| `storage` | Favori, ayar ve oturum geçmişini yerel olarak saklamak için |
-| `contextMenus` | Sağ-tık menüsüne "Data Helper" girdisini eklemek için |
-| `activeTab` | Sağ-tık menüsü tıklandığında, yalnızca o sekmenin aktif input'una veri yazmak için — kullanıcı eylemiyle tetiklenir ve başka sekmelerdeki içeriğe erişim sağlamaz |
-| `scripting` | Sağ-tık tetiklendiğinde ilgili sekmeye tek seferlik, üretilen değeri yazan ince bir fonksiyon enjekte etmek için |
+Data Helper hiçbir sayfaya arka planda kalıcı betik yüklemez.
 
-Önceki sürümlerde kullanılan kalıcı `<all_urls>` content-script kaldırıldı. Artık hiçbir sayfaya uzantı arka planda yüklenmiyor — yalnızca sağ-tık + menü seçimi ile, o anki sekmeye, tek seferlik bir doldurma fonksiyonu enjekte ediliyor.
+## Üretilen veriler
 
-## Üretilen Veriler Hakkında
-
-Uzantının ürettiği tüm veriler (TCKN, IBAN, telefon numarası, kredi kartı numarası vb.) **tamamen rastgele ve sahte**dir. Bu veriler:
-- Gerçek kişilere veya hesaplara ait değildir
-- Matematiksel algoritmalara göre geçerli formatta (Luhn, mod97 vb.) üretilir
-- Yalnızca test amaçlı kullanılmalıdır
-- Gerçek işlemlerde (bankacılık, resmi başvuru vb.) kullanılmamalıdır
-
-## Çocukların Gizliliği
-
-Bu uzantı çocuklara yönelik değildir ve 13 yaşın altındaki çocuklardan bilerek veri toplamaz.
-
-## Değişiklikler
-
-Bu gizlilik politikası zaman zaman güncellenebilir. Önemli değişiklikler olması durumunda CHANGELOG / sürüm notları üzerinden bilgilendirme yapılacaktır.
+TCKN, VKN, IBAN, telefon, kart numarası gibi tüm değerler rastgele ve sahtedir; gerçek kişilere ya da hesaplara ait değildir. Biçim ve sağlama kurallarına uyarlar ama yalnız test için kullanılmalıdır.
 
 ## İletişim
 
-Gizlilik politikası hakkında sorularınız için GitHub üzerinden issue açabilirsiniz:
-https://github.com/osmnnl/TestDataHelper/issues
+Sorular için: https://github.com/osmnnl/TestDataHelper/issues
+
+Data Helper açık kaynaklıdır: https://github.com/osmnnl/TestDataHelper
 
 ---
 
-*Bu uzantı açık kaynaklıdır ve kaynak kodu GitHub'da incelenebilir.*
+# Privacy Policy · Data Helper
+
+**Last updated:** 4 November 2026 · version 2.0.0
+
+## In short
+
+Data Helper collects no personal data, sends nothing to any server and uses no analytics or tracking. Every value it produces is fake test data. Everything runs in your browser.
+
+## What is stored
+
+| What | Where | Removed when |
+|------|-------|--------------|
+| The current (fake) person and company, lock state | `chrome.storage.local` | You uninstall or press "New" |
+| Favorites and settings (theme, hidden sites) | `chrome.storage.sync`; `chrome.storage.local` if the quota is full | You uninstall |
+| Bulk export templates | `chrome.storage.local` | You uninstall |
+| Recently copied values and the last fill summary (for Undo) | `chrome.storage.session` | The browser closes |
+
+With `chrome.storage.sync`, Google syncs your favorites and settings between the Chrome browsers signed in to the same Google account. Data Helper has no server of its own.
+
+Data Helper does not read, store or send the content of the pages it fills. It looks at field labels to decide what goes into each field; that information never leaves the page.
+
+## Permissions
+
+| Permission | Why |
+|------------|-----|
+| `activeTab` | Fill the form in the tab you are using, only when you ask (button, shortcut, right-click) |
+| `scripting` | Load the fill engine into that tab once, at that moment. No remote code; the engine ships inside the extension |
+| `storage` | Keep the items in the table above |
+| `contextMenus` | Add the "Data Helper" right-click menu |
+| `sidePanel` | Open Data Helper in the side panel |
+| `<all_urls>` (optional) | Asked separately, per site, only when you fill from the side panel. The extension works without it |
+
+Data Helper never runs persistent scripts in the background of any page.
+
+## Generated data
+
+All values (TCKN, VKN, IBAN, phone, card numbers and so on) are random and fake and belong to no real person or account. They follow format and checksum rules but are for testing only.
+
+## Contact
+
+Questions: https://github.com/osmnnl/TestDataHelper/issues
+
+Data Helper is open source: https://github.com/osmnnl/TestDataHelper
