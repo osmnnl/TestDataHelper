@@ -48,6 +48,9 @@ export {
   generateDriverLicenseClass,
   generateDriverLicenseNo,
   generatePassportNo,
+  generateIdCardSerial,
+  generateRegistry,
+  generateAddressCode,
 } from "./documents";
 
 // SGK

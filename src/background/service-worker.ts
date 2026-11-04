@@ -35,6 +35,8 @@ async function getState(): Promise<HelperState> {
   let company = s[K.company] as Company | undefined;
   // 1.x persona'sında yeni alanlar yok → yenile
   if (!persona?.dates) persona = generatePersona();
+  // 2.0 öncesi kayıtta sonradan eklenen bağımsız alanlar eksik → yalnız onları tamamla
+  else if (!persona.registry || !persona.idCardSerial || !persona.addressCode) persona = { ...generatePersona(), ...persona };
   if (!company?.vkn) company = generateCompany();
   if (s[K.persona] !== persona || s[K.company] !== company) {
     await chrome.storage.local.set({ [K.persona]: persona, [K.company]: company });

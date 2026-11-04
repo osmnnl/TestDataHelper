@@ -46,3 +46,27 @@ export function generatePassportNo(): string {
   for (let i = 0; i < 8; i++) digits += Math.floor(rng() * 10).toString();
   return `${letter}${digits}`;
 }
+function digits(n: number): string {
+  let out = "";
+  for (let i = 0; i < n; i++) out += Math.floor(rng() * 10).toString();
+  return out;
+}
+
+const SERIAL_LETTERS = "ABCDEFGHJKLMNPRSTUVYZ";
+
+/** Çipli kimlik kartı seri no: harf + 2 hane + harf + 5 hane (A12B34567). */
+export function generateIdCardSerial(): string {
+  const l = () => SERIAL_LETTERS[Math.floor(rng() * SERIAL_LETTERS.length)];
+  return `${l()}${digits(2)}${l()}${digits(5)}`;
+}
+
+/** Nüfus kaydı: cilt 1–9999, aile sıra 1–999, birey sıra 1–99. */
+export function generateRegistry(): { volume: string; family: string; person: string } {
+  const n = (max: number) => String(1 + Math.floor(rng() * max));
+  return { volume: n(9999), family: n(999), person: n(99) };
+}
+
+/** UAVT adres kodu: 10 hane, başı sıfır değil. */
+export function generateAddressCode(): string {
+  return `${1 + Math.floor(rng() * 9)}${digits(9)}`;
+}

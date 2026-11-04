@@ -42,16 +42,16 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-card: hsl(240 6% 12%);
-    --bg-card-50: hsl(240 6% 12% / 0.5);
-    --bg-subtle: hsl(240 6% 9%);
+    --bg-card: hsl(217 11% 18%);
+    --bg-card-50: hsl(217 11% 18% / 0.5);
+    --bg-subtle: hsl(217 12% 17%);
     --bg-inverse: hsl(0 0% 98%);
     --fg: hsl(0 0% 95%);
     --fg-strong: hsl(0 0% 98%);
     --fg-muted: hsl(240 5% 65%);
     --fg-subtle: hsl(240 4% 46%);
     --fg-inverse: hsl(240 10% 3.9%);
-    --border: hsl(240 4% 20%);
+    --border: hsl(217 10% 25%);
     --border-strong: hsl(240 4% 28%);
     --border-hover: hsl(240 4% 30%);
     --scrollbar: hsl(240 4% 25%);
@@ -63,7 +63,7 @@
     --accent-orange: hsl(36 100% 60%);
     --accent-orange-bg: hsl(36 40% 20%);
 
-    --tg-bg: hsl(240 6% 12%);
+    --tg-bg: hsl(217 11% 18%);
     --tg-fg: hsl(0 0% 95%);
     --tg-btn-bg: hsl(0 0% 95%);
     --tg-btn-fg: hsl(240 10% 3.9%);

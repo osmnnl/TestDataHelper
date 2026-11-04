@@ -66,6 +66,8 @@ export const CATALOG: readonly CatalogItem[] = [
   { id: "driverLicense", label: "Ehliyet Sınıfı", tab: "person", get: (c) => c.persona.driverLicenseClass },
   { id: "driverLicenseNo", label: "Ehliyet No", tab: "person", get: (c) => c.persona.driverLicenseNo },
   { id: "smmm", label: "SMMM Sicil No", tab: "person", get: (c) => c.persona.smmmNo },
+  { id: "idCardSerial", label: "Kimlik Seri No", tab: "person", get: (c) => c.persona.idCardSerial },
+  { id: "registry", label: "Cilt · Aile Sıra · Birey Sıra", tab: "person", get: (c) => `${c.persona.registry.volume} / ${c.persona.registry.family} / ${c.persona.registry.person}` },
   { id: "jobTitle", label: "Görev / Unvan", tab: "person", get: (c) => c.persona.jobTitle },
   { id: "department", label: "Departman", tab: "person", get: (c) => c.persona.department },
 
@@ -94,6 +96,7 @@ export const CATALOG: readonly CatalogItem[] = [
   { id: "city", label: "İl", tab: "address", get: (c) => c.persona.city, check: (c) => `${c.persona.plateCode} plaka` },
   { id: "district", label: "İlçe", tab: "address", get: (c) => c.persona.district },
   { id: "postalCode", label: "Posta Kodu", tab: "address", get: (c) => c.persona.postalCode },
+  { id: "addressCode", label: "Adres Kodu (UAVT)", tab: "address", get: (c) => c.persona.addressCode },
   { id: "neighborhood", label: "Mahalle", tab: "address", get: (c) => c.persona.neighborhood },
   { id: "avenue", label: "Cadde", tab: "address", get: (c) => c.persona.avenue },
   { id: "street", label: "Sokak", tab: "address", get: (c) => c.persona.street },

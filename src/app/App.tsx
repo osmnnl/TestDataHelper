@@ -31,6 +31,15 @@ function send<T>(msg: unknown): Promise<T> {
   return chrome.runtime.sendMessage(msg) as Promise<T>;
 }
 
+/** Aramada "iban" = "IBAN", "sehir" = "Şehir": Türkçe küçük harf, ı→i, aksan yok */
+function fold(text: string) {
+  return text.toLocaleLowerCase("tr").replace(/ı/g, "i").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+function recordCopy(label: string, value: string) {
+  void appendHistory({ label, value, ts: Date.now(), source: "popup" });
+}
+
 function displayDate(iso: string) {
   const [y, m, d] = iso.split("-");
   return `${d}.${m}.${y}`;
@@ -46,6 +55,7 @@ export function App({ variant }: { variant: "popup" | "panel" }) {
   const [needsPermission, setNeedsPermission] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [query, setQuery] = useState("");
   const { isFavorite, toggleFavorite } = useFavorites();
 
   const refreshTab = useCallback(async () => {
@@ -118,7 +128,7 @@ export function App({ variant }: { variant: "popup" | "panel" }) {
     try {
       await navigator.clipboard.writeText(value);
       flash(`${label} kopyalandı`);
-      void appendHistory({ label, value, ts: Date.now(), source: "popup" });
+      recordCopy(label, value);
     } catch {
       flash("Kopyalanamadı");
     }
@@ -138,13 +148,17 @@ export function App({ variant }: { variant: "popup" | "panel" }) {
     if (windowId !== null) void chrome.sidePanel.open({ windowId }).then(() => window.close());
   };
 
+  const q = fold(query.trim());
   const rows = useMemo(() => {
     if (!state) return [];
     const from = POPUP_TABS.find((t) => t.id === tab)?.from ?? [];
-    const items = CATALOG.filter((c) => from.includes(c.tab));
+    // Arama yazılınca tüm sekmelerde ad ve değere göre süzülür
+    const items = q
+      ? CATALOG.filter((c) => c.tab !== "text" && fold(`${c.label} ${c.get(state)}`).includes(q))
+      : CATALOG.filter((c) => from.includes(c.tab));
     // Favoriler sekmenin başında
     return [...items.filter((i) => isFavorite(i.id)), ...items.filter((i) => !isFavorite(i.id))];
-  }, [state, tab, isFavorite]);
+  }, [state, tab, q, isFavorite]);
 
   if (!state) return <div className={`app app--${variant}`} />;
   const p = state.persona;
@@ -153,7 +167,7 @@ export function App({ variant }: { variant: "popup" | "panel" }) {
     <div className={`app app--${variant}`}>
       <header className="top">
         <div className="brand">
-          <span className="logo" aria-hidden="true">D</span>
+          <img className="logo" src="icons/icon48.png" alt="" width={20} height={20} />
           <span className="brand-name">Data Helper</span>
         </div>
         <div className="top-actions">
@@ -181,7 +195,7 @@ export function App({ variant }: { variant: "popup" | "panel" }) {
             <button className="btn btn-sm" onClick={() => void grant()}>İzin ver</button>
           </div>
         )}
-        <div className="persona">
+        <div className="persona" aria-label="Geçerli kişi">
           <div className="persona-head">
             <span className="persona-name">{p.fullName}</span>
             <span className="persona-actions">
@@ -199,7 +213,18 @@ export function App({ variant }: { variant: "popup" | "panel" }) {
         </div>
       </section>
 
-      <nav className="tabs" role="tablist" aria-label="Veri grupları">
+      <div className="search">
+        <Icon name="search" />
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Ara: TCKN, IBAN, il, vergi…"
+          aria-label="Verilerde ara"
+        />
+      </div>
+
+      <nav className="tabs" role="tablist" aria-label="Veri grupları" hidden={!!q}>
         {POPUP_TABS.map((t) => (
           <button key={t.id} role="tab" aria-selected={tab === t.id} className={`tab${tab === t.id ? " is-active" : ""}`} onClick={() => setTab(t.id)}>
             {t.label}
@@ -208,16 +233,16 @@ export function App({ variant }: { variant: "popup" | "panel" }) {
       </nav>
 
       <main className="body">
-        {tab === "text" ? (
+        {!q && tab === "text" ? (
           <div className="pad">
             <TextGenerator onCopy={(v) => void copy("Metin", v)} />
             <HistoryPanel onCopy={(v) => void copy("Değer", v)} />
           </div>
-        ) : tab === "bulk" ? (
+        ) : !q && tab === "bulk" ? (
           <BulkPanel company={state.company} onStatus={flash} />
         ) : (
           <>
-            {tab === "company" && (
+            {!q && tab === "company" && (
               <div className="subhead">
                 <span>{state.company.name}</span>
                 <button className="btn btn-sm" onClick={() => void regenerate("company")}>Yeni şirket</button>
@@ -231,10 +256,10 @@ export function App({ variant }: { variant: "popup" | "panel" }) {
                 const fav = isFavorite(item.id);
                 return (
                   <li key={item.id} className="row">
-                    <div className="row-main">
+                    <button type="button" className="row-main" title={`${shown} — tıkla, kopyala`} onClick={() => void copy(item.label, value)}>
                       <span className="row-label">{item.label}</span>
-                      <span className="row-value" title={shown}>{shown}</span>
-                    </div>
+                      <span className="row-value">{shown}</span>
+                    </button>
                     {check && <span className="row-check">{check}</span>}
                     <button className={`icon-btn icon-btn--sm${fav ? " is-fav" : ""}`} aria-label={fav ? "Favorilerden çıkar" : "Favorilere ekle"} aria-pressed={fav} onClick={() => void toggleFavorite(item.id)}>
                       <Icon name="star" filled={fav} />
@@ -246,6 +271,7 @@ export function App({ variant }: { variant: "popup" | "panel" }) {
                 );
               })}
             </ul>
+            {q && rows.length === 0 && <p className="empty">“{query}” için sonuç yok</p>}
           </>
         )}
       </main>

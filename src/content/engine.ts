@@ -125,15 +125,19 @@ function isFillable(el: Element): boolean {
   if (isOwnUi(el)) return false;
   if (el instanceof HTMLInputElement) {
     if (SKIP_TYPES.has(el.type)) return false;
-    if (el.disabled) return false;
+    // Kapalı liste kalabilir: il seçilince açılan ilçe gibi (fill sona bırakır)
+    if (el.disabled && !isCombobox(el)) return false;
     if (el.readOnly && !isCombobox(el) && !el.closest(".ant-select, .react-datepicker-wrapper")) return false;
   } else if (el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement) {
     if (el.disabled || (el instanceof HTMLTextAreaElement && el.readOnly)) return false;
   } else if (el.getAttribute("aria-disabled") === "true") return false;
   // MUI / özel onay kutuları görünmez input taşır; kapsayıcısı görünürse yeter
+  // Kapalı react-select girişini gizler; görünürlüğü kontrol kutusundan oku
   const box = el instanceof HTMLInputElement && (el.type === "checkbox" || el.type === "radio")
     ? el.parentElement ?? el
-    : el;
+    : isCombobox(el)
+      ? el.closest("[class*='-control'], [class*='__control']") ?? el
+      : el;
   return isVisible(box);
 }
 
@@ -224,17 +228,28 @@ function hintsOf(el: Control) {
 
 // ---- Kapsam ---------------------------------------------------------------
 
+const SAVE_RE = /^(kaydet|kaydet ve kapat|save|gönder|submit|oluştur|create|güncelle|update)$/i;
+
+function hasSaveButton(root: Element): boolean {
+  if (root.querySelector("button[type=submit], input[type=submit]")) return true;
+  return Array.from(root.querySelectorAll("button")).some((b) => SAVE_RE.test(b.textContent?.trim() ?? ""));
+}
+
 function scopeFor(target: Element | null, doc: Document): { root: ParentNode; label: string } {
   if (target) {
     const form = target.closest("form");
     if (form && collect(form).length > 0) return { root: form, label: "form" };
     const dialog = target.closest("dialog, [role=dialog], [aria-modal=true], .modal, .MuiDialog-root, .ant-modal");
     let cur: Element | null = target.parentElement;
+    let group: Element | null = null;
     while (cur && cur !== doc.body) {
-      if (collect(cur).length >= 3) return { root: cur, label: "alan grubu" };
+      if (!group && collect(cur).length >= 3) group = cur;
+      // <form> olmayan sayfalarda formun sınırı Kaydet düğmesini taşıyan kap
+      if (group && hasSaveButton(cur)) return { root: cur, label: "form" };
       if (cur === dialog) return { root: cur, label: "diyalog" };
       cur = cur.parentElement;
     }
+    if (group) return { root: group, label: "alan grubu" };
     if (dialog) return { root: dialog, label: "diyalog" };
   }
   const dialogs = Array.from(doc.querySelectorAll("dialog[open], [role=dialog], [aria-modal=true], .modal.show, .MuiDialog-root, .ant-modal"))
@@ -362,7 +377,8 @@ function isCountryCodeBox(el: Control): boolean {
 
 function hasCountryCodeSibling(el: Element): boolean {
   let cur: Element | null = el.parentElement;
-  for (let d = 0; d < 3 && cur; d++) {
+  // +90 kutusu çoğu zaman ayrı bir sütunda/fieldset'te: birkaç kat yukarı bak
+  for (let d = 0; d < 5 && cur; d++) {
     const inputs = Array.from(cur.querySelectorAll("input:not([type=hidden])")) as HTMLInputElement[];
     if (inputs.length > 3) return false;
     if (inputs.some((i) => i !== el && isCountryCodeBox(i))) return true;
@@ -430,8 +446,14 @@ function bestMatch<T>(items: T[], text: (t: T) => string, hints: string[] = []):
   return null;
 }
 
+function comboHost(input: Element): Element | null {
+  // react-select'te en yakın "-container" giriş kutusunun kendisi; kontrolün üstü asıl kap
+  const control = input.closest("[class*='-control'], [class*='__control']");
+  return control?.parentElement ?? input.closest("[class*='-container'], .MuiAutocomplete-root, .ant-select") ?? input.parentElement;
+}
+
 function comboShownText(input: Element): string {
-  const host = input.closest("[class*='-container'], .MuiAutocomplete-root, .ant-select") ?? input.parentElement;
+  const host = comboHost(input);
   const single = host?.querySelector("[class*='singleValue'], [class*='single-value'], .ant-select-selection-item, [class*='multiValue']");
   if (single) return textOf(single);
   if (input instanceof HTMLInputElement && input.value) return input.value;
@@ -459,13 +481,18 @@ async function pickFromCombobox(input: HTMLElement, hints: string[] | undefined)
   if (!choice && hints?.length && searchable) {
     const inp = input as HTMLInputElement;
     inp.focus();
-    input.ownerDocument.execCommand("insertText", false, hints[0]);
-    const filtered = await waitFor(() => {
-      const o = optionCandidates(input);
-      return o.length ? o : null;
-    }, 1200);
-    opts = filtered ?? [];
-    choice = bestMatch(opts, textOf, hints);
+    // Sırayla birkaç ipucu dene ("T.C." yoksa "Türkiye"), sonra rastgele
+    for (const hint of hints.slice(0, 3)) {
+      if (inp.value) { inp.select(); input.ownerDocument.execCommand("delete"); }
+      input.ownerDocument.execCommand("insertText", false, hint);
+      const filtered = await waitFor(() => {
+        const o = optionCandidates(input);
+        return o.length ? o : null;
+      }, 1200);
+      opts = filtered ?? [];
+      choice = bestMatch(opts, textOf, hints);
+      if (choice) break;
+    }
     if (!choice) {
       // Aranan yoksa yazılanı silip rastgele seç
       inp.select();
@@ -507,6 +534,18 @@ function controlKind(el: Control): Planned["control"] {
   }
   if (!(el instanceof HTMLInputElement) && !(el instanceof HTMLTextAreaElement)) return "editable";
   return "text";
+}
+
+/** Data Helper'ın yazdığı alanlar; sayfanın kendi ön doldurduğu değerlerden ayırmak için */
+const FILLED = new WeakSet<Element>();
+
+/** Formda sayfanın önceden doldurduğu değer (otomatik kod, +90, varsayılan) korunur. */
+function keepPrefilled(planned: Planned[]): void {
+  for (const p of planned) {
+    if (p.control !== "text" || FILLED.has(p.el)) continue;
+    const v = (p.el as HTMLInputElement).value;
+    if (v && v.trim()) p.value = null;
+  }
 }
 
 function plan(controls: Control[], ctx: FillContext): Planned[] {
@@ -620,6 +659,7 @@ async function applyOne(p: Planned, undo: UndoEntry[]): Promise<"filled" | "skip
       }
       typeInto(inp, text, charByChar);
       blurField(inp);
+      FILLED.add(inp);
       return "filled";
     }
   }
@@ -679,12 +719,38 @@ function clearMarks(els: Element[]) {
   }
 }
 
+/** Üst seçime bağlı açılan listeler */
+const DEPENDENT_KINDS = new Set<FieldKind>(["district", "neighborhood", "city"]);
+
+function isDisabledControl(el: Element): boolean {
+  if ((el as HTMLInputElement).disabled) return true;
+  return !!el.closest("[aria-disabled=true], [class*='--is-disabled'], .Mui-disabled, .ant-select-disabled");
+}
+
 async function fill(planned: Planned[]): Promise<RunResult> {
   const undo: UndoEntry[] = [];
   let filled = 0;
   let skipped = 0;
   const done: Planned[] = [];
+  const waiting: Planned[] = [];
   for (const p of planned) {
+    // İl seçilince açılan ilçe gibi bağımlı alanlar: sona bırak
+    if (isDisabledControl(p.el)) {
+      if (p.value && DEPENDENT_KINDS.has(p.kind)) waiting.push(p);
+      else skipped++;
+      continue;
+    }
+    try {
+      const r = await applyOne(p, undo);
+      if (r === "filled") { filled++; done.push(p); }
+      else if (r === "skipped") skipped++;
+    } catch {
+      skipped++;
+    }
+  }
+  for (const p of waiting) {
+    const ready = await waitFor(() => (isDisabledControl(p.el) ? null : true), 3000);
+    if (!ready) { skipped++; continue; }
     try {
       const r = await applyOne(p, undo);
       if (r === "filled") { filled++; done.push(p); }
@@ -713,7 +779,7 @@ async function undoLast(): Promise<RunResult> {
         setValueDirect(u.el as HTMLSelectElement, String(u.prev));
         restored++;
       } else if (u.type === "combobox") {
-        const host = u.el.closest("[class*='-container'], .MuiAutocomplete-root, .ant-select");
+        const host = comboHost(u.el);
         const clear = host?.querySelector("[class*='clearIndicator'], .MuiAutocomplete-clearIndicator, .ant-select-clear") as HTMLElement | null;
         if (clear) { click(clear); restored++; } else failed++;
       } else if (u.el instanceof HTMLInputElement || u.el instanceof HTMLTextAreaElement) {
@@ -938,6 +1004,7 @@ async function run(args: RunArgs): Promise<RunResult | null> {
     case "preview": {
       const { root, label } = scopeFor(target, document);
       const planned = plan(collect(root), ctx);
+      keepPrefilled(planned);
       if (!planned.length) {
         toast("Doldurulacak alan bulunamadı");
         return { acted: true, filled: 0, skipped: 0, mismatches: [], message: "Alan bulunamadı" };

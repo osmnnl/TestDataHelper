@@ -22,7 +22,7 @@ import {
   generateCardExpiry,
 } from "./creditCard";
 import { generatePlate } from "./plate";
-import { generatePassportNo, generateDriverLicenseClass, generateDriverLicenseNo } from "./documents";
+import { generatePassportNo, generateDriverLicenseClass, generateDriverLicenseNo, generateIdCardSerial, generateRegistry, generateAddressCode } from "./documents";
 import { generateSMMMNo } from "./smmm";
 import {
   pickPlace,
@@ -78,6 +78,12 @@ export interface Persona {
   driverLicenseNo: string;
   /** SMMM ruhsat sicil no, 5 hane */
   smmmNo: string;
+  /** Kimlik kartı seri no (A12B34567) */
+  idCardSerial: string;
+  /** Nüfus kaydı cilt / aile sıra / birey sıra */
+  registry: { volume: string; family: string; person: string };
+  /** UAVT adres kodu, 10 hane */
+  addressCode: string;
   plate: string;
   passport: string;
   jobTitle: string;
@@ -218,6 +224,9 @@ export function generatePersona(): Persona {
     driverLicenseClass: rng() < 0.7 ? "B" : generateDriverLicenseClass(),
     driverLicenseNo: generateDriverLicenseNo(),
     smmmNo: generateSMMMNo(),
+    idCardSerial: generateIdCardSerial(),
+    registry: generateRegistry(),
+    addressCode: generateAddressCode(),
     jobTitle: pick(JOB_TITLES),
     department: pick(DEPARTMENTS),
   };

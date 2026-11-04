@@ -66,7 +66,7 @@ export function valueFor(kind: FieldKind, ctx: FillContext, label = ""): FieldVa
       return { text: t, optionHints: p.gender === "female" ? ["Kadın", "Kadin", "Bayan", "Female", "K"] : ["Erkek", "Bay", "Male", "E"] };
     }
     case "maritalStatus": return { text: "Bekar", optionHints: ["Bekar", "Bekâr", "Evli"] };
-    case "nationality": return { text: "T.C.", optionHints: ["T.C.", "Türkiye", "TC", "Türk"] };
+    case "nationality": return { text: "T.C.", optionHints: ["Türkiye", "T.C.", "TC", "Türk"] };
     case "age": return { text: String(age), number: age };
     case "tckn": return { text: p.tckn };
     case "foreignId": return { text: p.foreignId };
@@ -74,6 +74,12 @@ export function valueFor(kind: FieldKind, ctx: FillContext, label = ""): FieldVa
     case "driverLicenseClass": return { text: p.driverLicenseClass, optionHints: [p.driverLicenseClass] };
     case "driverLicenseNo": return { text: p.driverLicenseNo };
     case "smmmNo": return { text: p.smmmNo };
+    case "idCardSerial": return { text: p.idCardSerial };
+    case "registryVolume": return { text: p.registry.volume, number: Number(p.registry.volume) };
+    case "registryFamily": return { text: p.registry.family, number: Number(p.registry.family) };
+    case "registryPerson": return { text: p.registry.person, number: Number(p.registry.person) };
+    case "addressCode": return { text: p.addressCode, number: Number(p.addressCode) };
+    case "employeeCode": return { text: p.tckn.slice(-6) };
     case "sgkNo": return { text: p.tckn };
     case "email": return { text: p.email };
     case "workEmail": return { text: p.workEmail };

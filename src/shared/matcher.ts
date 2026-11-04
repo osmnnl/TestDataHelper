@@ -12,6 +12,7 @@ export type FieldKind =
   | "birthPlace" | "gender" | "maritalStatus" | "nationality" | "age"
   | "tckn" | "foreignId" | "passport" | "sgkNo"
   | "driverLicenseClass" | "driverLicenseNo" | "smmmNo"
+  | "idCardSerial" | "registryVolume" | "registryFamily" | "registryPerson" | "addressCode" | "employeeCode"
   | "email" | "workEmail" | "kepEmail" | "username" | "password"
   | "phone" | "workPhone" | "homePhone" | "countryCode"
   | "birthDate" | "hireDate" | "exitDate" | "leaveStart" | "leaveEnd"
@@ -61,11 +62,17 @@ const RULES: Rule[] = [
   ["smmmNo", /\bsmmm\b|mali musavir|muhasebeci sicil/],
   ["driverLicenseNo", /(ehliyet|surucu belgesi?) (no|numara|belge no)|licen[cs]e (no|number)/],
   ["driverLicenseClass", /ehliyet|surucu belge|driver.?s? licen[cs]e/],
+  ["idCardSerial", /\bseri (no|numara)|kimlik seri|cuzdan seri|serial (no|number)/],
+  ["registryVolume", /\bcilt (no|numara)|volume (no|number)/],
+  ["registryFamily", /aile sira|hane (no|sira)|family order/],
+  ["registryPerson", /birey sira|individual order|\bsira no\b/],
+  ["addressCode", /adres kodu|\buavt\b|address code/],
   ["sgkWorkplaceNo", /isyeri sicil|sgk isyeri|isyeri (no|numara)|workplace (no|number)/],
   ["taxOffice", /vergi dairesi|\bv ?d\b|tax office/],
   ["vkn", /vergi (kimlik )?(no|numara)|\bvkn\b|tax (id|number|no)/],
   ["tckn", /\btc\b|tckn|\bt c\b|kimlik (no|numara)|national id|identity (no|number)|\bssn\b/],
   ["sgkNo", /\bsgk\b|\bssk\b|sigorta sicil/],
+  ["employeeCode", /(personel|calisan|isci) (kodu|no|numarasi|sicil)|employee (code|no|number|id)/],
   ["nace", /\bnace\b|faaliyet kodu/],
   ["iban", /\biban\b|hesap (no|numara)/],
   ["cvv", /\bcvv|\bcvc|\bccv\b|guvenlik kodu/],
@@ -177,6 +184,8 @@ export const KIND_LABELS: Record<FieldKind, string> = {
   maritalStatus: "Medeni hal", nationality: "Uyruk", age: "Yaş", tckn: "TC kimlik no",
   foreignId: "Yabancı kimlik no", passport: "Pasaport no", sgkNo: "SGK sicil no",
   driverLicenseClass: "Ehliyet sınıfı", driverLicenseNo: "Ehliyet no", smmmNo: "SMMM sicil no",
+  idCardSerial: "Kimlik seri no", registryVolume: "Cilt no", registryFamily: "Aile sıra no",
+  registryPerson: "Birey sıra no", addressCode: "Adres kodu", employeeCode: "Personel kodu",
   email: "E-posta", workEmail: "İş e-postası", kepEmail: "KEP adresi",
   username: "Kullanıcı adı", password: "Şifre", phone: "Cep telefonu",
   workPhone: "İş telefonu", homePhone: "Ev telefonu", countryCode: "Ülke kodu",
