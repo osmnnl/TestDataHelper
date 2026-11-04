@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Data Helper",
-  "description": "Yazılım test süreçleri için hızlı ve güvenli sahte test verisi üreticisi — TCKN, IBAN, kredi kartı ve daha fazlası.",
-  "version": "1.3.0",
+  "description": "Türkçe test verisi: geçerli TCKN, VKN, IBAN; tutarlı persona ve şirket; formu tek tıkla doldurma, önizleme, geri alma; toplu CSV / XLSX.",
+  "version": "2.0.0",
   "minimum_chrome_version": "114",
   "action": {
     "default_popup": "popup.html",
@@ -39,6 +39,23 @@
         "mac": "Command+Shift+D"
       },
       "description": "Data Helper popup'ını aç"
+    },
+    "fill-form": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+F",
+        "mac": "Command+Shift+F"
+      },
+      "description": "Odaktaki formu doldur"
+    },
+    "fill-field": {
+      "suggested_key": {
+        "default": "Alt+Shift+F",
+        "mac": "Alt+Shift+F"
+      },
+      "description": "Odaktaki alanı doldur"
     }
-  }
+  },
+  "optional_host_permissions": [
+    "<all_urls>"
+  ]
 }

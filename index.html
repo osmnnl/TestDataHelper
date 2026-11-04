@@ -1,27 +1,285 @@
 <!doctype html>
-<html lang="tr">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="./vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
-    <title>Test Data Helper - Ücretsiz & Hızlı Test Verisi Üretici</title>
-    <meta
-      name="description"
-      content="Test Data Helper, yazılım test süreçleri için TCKN, IBAN, Telefon ve daha fazlasını anında üreten modern bir Chrome uzantısıdır."
-    />
-    <script type="module" crossorigin src="./assets/main-B5udB3JJ.js"></script>
-    <link rel="modulepreload" crossorigin href="./assets/index-H47kr0qp.js">
-    <link rel="modulepreload" crossorigin href="./assets/regex-88hVFiPJ.js">
-    <link rel="stylesheet" crossorigin href="./assets/index-lw0AzkWn.css">
-    <link rel="stylesheet" crossorigin href="./assets/main-CtTO3GxM.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data Helper · Turkish test data and one-click form filling</title>
+<meta name="description" content="Fill a whole form with one consistent person: valid TCKN, VKN and IBAN, matching city, district and postal code, real dates. Preview, undo, right-click menu and CSV / XLSX export.">
+<meta property="og:title" content="Data Helper">
+<meta property="og:description" content="Valid Turkish test data and one-click form filling for developers and testers.">
+<meta property="og:image" content="https://osmnnl.github.io/TestDataHelper/site/img/filled-both.png">
+<link rel="icon" href="./icons/icon48.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <script type="module" crossorigin src="/TestDataHelper/assets/main-CoytEZAv.js"></script>
+  <link rel="modulepreload" crossorigin href="/TestDataHelper/assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="stylesheet" crossorigin href="/TestDataHelper/assets/main-D49XVmOA.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#"><img src="./icons/icon48.png" alt="" width="28" height="28">Data Helper</a>
+    <nav aria-label="Main">
+      <a href="#fill"><span data-l="en">Features</span><span data-l="tr">Özellikler</span></a>
+      <a href="#data"><span data-l="en">Data</span><span data-l="tr">Veriler</span></a>
+      <a href="https://github.com/osmnnl/TestDataHelper">GitHub</a>
+      <button type="button" class="lang" id="lang" aria-label="Switch language">TR</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><span data-l="en">Chrome extension · v2.0.0 · free and open source</span><span data-l="tr">Chrome uzantısı · v2.0.0 · ücretsiz ve açık kaynak</span></div>
+      <h1 data-l="en">Fill the whole form with <span class="mark">one consistent person</span>.</h1>
+      <h1 data-l="tr">Tüm formu <span class="mark">tek tutarlı kişiyle</span> doldurun.</h1>
+      <p class="lede" data-l="en">Valid TCKN, VKN and IBAN. City, district, postal code and area code that match. A birth date, a hire date and a leave date where each belongs. Typed into the form you clicked, with preview and undo.</p>
+      <p class="lede" data-l="tr">Geçerli TCKN, VKN ve IBAN. Birbirini tutan il, ilçe, posta kodu ve alan kodu. Doğum, işe giriş ve izin tarihi kendi alanına. Tıkladığınız forma yazılır; önizleme ve geri alma var.</p>
+      <div class="cta">
+        <a class="btn primary" href="https://chromewebstore.google.com/detail/hboimhjgdphpokonjindjhgoihkmboli">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12m0 0-5-5m5 5 5-5M5 20h14"/></svg>
+          <span data-l="en">Add to Chrome</span><span data-l="tr">Chrome'a ekle</span>
+        </a>
+        <a class="btn ghost" href="https://github.com/osmnnl/TestDataHelper"><span data-l="en">View source</span><span data-l="tr">Kaynak kod</span></a>
+      </div>
+      <p class="meta"><span data-l="en">Runs locally. No account, no server, no tracking.</span><span data-l="tr">Yerel çalışır. Hesap yok, sunucu yok, izleme yok.</span></p>
+
+      <div class="sample" aria-label="Sample values">
+        <div class="sample-row">
+          <span class="src">TC Kimlik No</span>
+          <code>10000000146</code>
+          <span class="chip"><span data-l="en">checksum ok</span><span data-l="tr">sağlama doğru</span></span>
+          <button type="button" class="copy" data-copy="10000000146"><span data-l="en">Copy</span><span data-l="tr">Kopyala</span></button>
+        </div>
+        <div class="sample-row">
+          <span class="src">IBAN · 26</span>
+          <code>TR33 0006 1005 1978 6457 8413 26</code>
+          <span class="chip">mod 97 ok</span>
+          <button type="button" class="copy" data-copy="TR330006100519786457841326"><span data-l="en">Copy</span><span data-l="tr">Kopyala</span></button>
+        </div>
+      </div>
+    </div>
+    <picture>
+      <source srcset="./site/img/popup-person-dark.png" media="(prefers-color-scheme: dark)">
+      <img class="shot hero-shot" src="./site/img/popup-person.png" width="400" height="596" alt="Data Helper popup: groups in a left rail (Favorites, Person, Company, Finance, Address, Text, Bulk), the current person with New and Lock, a list of values with copy buttons, and Fill this form, Preview and Undo at the bottom">
+    </picture>
+  </div>
+</div>
+
+<section id="fill">
+  <div class="wrap">
+    <h2 data-l="en">One shortcut, the form you are on.</h2>
+    <h2 data-l="tr">Tek kısayol, bulunduğunuz form.</h2>
+    <p class="intro" data-l="en">Click into a form and press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd>. Data Helper fills that form only and leaves the rest of the page alone.</p>
+    <p class="intro" data-l="tr">Bir forma tıklayın ve <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd>'ye basın. Data Helper yalnızca o formu doldurur, sayfanın geri kalanına dokunmaz.</p>
+    <img class="shot wide" src="./site/img/filled-both.png" width="1280" height="800" alt="A new employee form filled by Data Helper: name, TCKN, birth date, parents' names, phone, email, gender, address, city, district, postal code, IBAN, hire date, salary and SGK number">
+    <ul class="grid4">
+      <li><h3 data-l="en">Recognises the field</h3><h3 data-l="tr">Alanı tanır</h3><p data-l="en">Reads the label, legend, aria-label and placeholder, in Turkish or English. Mother's name, father's name and the company name each get their own value.</p><p data-l="tr">Etiketi, legend'ı, aria-label'ı ve placeholder'ı okur; Türkçe ya da İngilizce. Anne adı, baba adı ve şirket adı ayrı ayrı doldurulur.</p></li>
+      <li><h3 data-l="en">Real dropdowns</h3><h3 data-l="tr">Gerçek açılır listeler</h3><p data-l="en">Native selects, react-select, MUI Autocomplete and AntD Select: the list is opened and a real option is chosen, so dependent lists like city → district work.</p><p data-l="tr">Native select, react-select, MUI Autocomplete ve AntD Select: liste açılır ve gerçek bir seçenek seçilir; il → ilçe gibi bağlı listeler çalışır.</p></li>
+      <li><h3 data-l="en">Masks and dates</h3><h3 data-l="tr">Maskeler ve tarihler</h3><p data-l="en">Masked inputs are typed one character at a time and a separate +90 box is skipped. The date format is taken from the field: DD.MM.YYYY, DD/MM/YYYY or ISO.</p><p data-l="tr">Maskeli alanlara harf harf yazılır, ayrı +90 kutusu atlanır. Tarih biçimi alandan alınır: GG.AA.YYYY, GG/AA/YYYY ya da ISO.</p></li>
+      <li><h3 data-l="en">Everything else</h3><h3 data-l="tr">Geri kalan her şey</h3><p data-l="en">Checkboxes, radio buttons, time inputs and same-origin iframes. File, read-only and disabled fields are skipped.</p><p data-l="tr">Onay kutusu, radyo düğmesi, saat alanı ve aynı kaynaklı iframe'ler. Dosya, salt okunur ve devre dışı alanlar atlanır.</p></li>
+    </ul>
+  </div>
+</section>
+
+<section id="preview">
+  <div class="wrap split">
+    <div>
+      <h2 data-l="en">See it before it is typed. Undo it after.</h2>
+      <h2 data-l="tr">Yazılmadan önce görün, sonra geri alın.</h2>
+      <p class="intro" data-l="en">The preview lists every field Data Helper found and the value it will write. Fields it will skip are marked.</p>
+      <p class="intro" data-l="tr">Önizleme, bulunan her alanı ve yazılacak değeri listeler. Atlanacak alanlar işaretlidir.</p>
+      <ul class="list">
+        <li><h3 data-l="en">Checked after filling</h3><h3 data-l="tr">Doldurduktan sonra kontrol</h3><p data-l="en">Each field is read back. A value the page did not accept is reported, not hidden.</p><p data-l="tr">Her alan yeniden okunur. Sayfanın kabul etmediği bir değer gizlenmez, bildirilir.</p></li>
+        <li><h3 data-l="en">Undo</h3><h3 data-l="tr">Geri al</h3><p data-l="en">One click puts the previous values back.</p><p data-l="tr">Tek tıkla eski değerler geri gelir.</p></li>
+        <li><h3 data-l="en">Lock the person</h3><h3 data-l="tr">Kişiyi kilitleyin</h3><p data-l="en">Keep the same person across several forms and pages, or press Refresh for a new one.</p><p data-l="tr">Aynı kişiyi birden çok form ve sayfada kullanın ya da Yenile ile yeni kişi üretin.</p></li>
+      </ul>
+    </div>
+    <img class="shot" src="./site/img/preview-panel.png" width="760" height="800" alt="Preview panel over a form listing sixteen fields with their values, an Apply button and a Cancel button">
+  </div>
+</section>
+
+<section id="menu">
+  <div class="wrap split flip">
+    <div>
+      <h2 data-l="en">Right-click any field.</h2>
+      <h2 data-l="tr">Herhangi bir alana sağ tıklayın.</h2>
+      <p class="intro" data-l="en">Fill one field, fill the form, insert a specific value or pick an option from a list. The menu is in Turkish, like the rest of the extension.</p>
+      <p class="intro" data-l="tr">Tek alanı ya da formu doldurun, belirli bir değer ekleyin veya listeden seçenek seçin.</p>
+      <ul class="list">
+        <li><h3><kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd></h3><p data-l="en">Fills the field that has focus.</p><p data-l="tr">Odaktaki alanı doldurur.</p></li>
+        <li><h3><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd></h3><p data-l="en">Fills the form that has focus. On a Mac, <kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>F</kbd>.</p><p data-l="tr">Odaktaki formu doldurur. Mac'te <kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>F</kbd>.</p></li>
+        <li><h3><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>D</kbd></h3><p data-l="en">Opens the popup. Shortcuts can be changed at chrome://extensions/shortcuts.</p><p data-l="tr">Popup'ı açar. Kısayollar chrome://extensions/shortcuts sayfasından değiştirilebilir.</p></li>
+      </ul>
+    </div>
+    <div class="menus" role="img" aria-label="Data Helper right-click menu with the Insert submenu open on Company">
+      <div class="menu">
+        <div class="row"><span><b>Bu alanı doldur</b></span><span>Alt+Shift+F</span></div>
+        <div class="row"><span>Bu formu doldur</span><span>Ctrl+Shift+F</span></div>
+        <div class="row"><span>Önizleyerek doldur…</span><span></span></div>
+        <div class="row"><span>Son doldurmayı geri al</span><span></span></div>
+        <hr>
+        <div class="row on"><span>Alana ekle</span><span>›</span></div>
+        <div class="row"><span>Listeden seçenek seç</span><span></span></div>
+        <hr>
+        <div class="row"><span>Kişi: Elâ Dinç</span><span>›</span></div>
+        <div class="row"><span>Panoya kopyala</span><span>›</span></div>
+      </div>
+      <div class="menu sub">
+        <div class="row"><span>Kişi</span><span>›</span></div>
+        <div class="row on"><span>Şirket</span><span>›</span></div>
+        <div class="row"><span>Finans</span><span>›</span></div>
+        <div class="row"><span>Adres</span><span>›</span></div>
+        <div class="row"><span>Tarih</span><span>›</span></div>
+        <div class="row"><span>Metin</span><span>›</span></div>
+      </div>
+      <div class="menu sub2">
+        <div class="row"><span>Ticari Unvan</span></div>
+        <div class="row"><span>Vergi Kimlik No</span></div>
+        <div class="row"><span>Vergi Dairesi</span></div>
+        <div class="row"><span>MERSİS No</span></div>
+        <div class="row"><span>SGK İşyeri Sicili</span></div>
+        <div class="row"><span>NACE Kodu</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="data">
+  <div class="wrap">
+    <h2 data-l="en">Data that passes validation.</h2>
+    <h2 data-l="tr">Doğrulamadan geçen veriler.</h2>
+    <p class="intro" data-l="en">Every number follows its real format and check-digit rule, and the values of one person agree with each other. Over 60 data types in four groups, with search and favorites.</p>
+    <p class="intro" data-l="tr">Her numara gerçek biçimine ve sağlama kuralına uyar; bir kişinin değerleri birbiriyle tutarlıdır. Dört grupta 60'tan fazla veri türü; arama ve favorilerle.</p>
+    <div class="table">
+      <table>
+        <thead><tr><th><span data-l="en">Field</span><span data-l="tr">Alan</span></th><th><span data-l="en">Format</span><span data-l="tr">Biçim</span></th><th><span data-l="en">Rule</span><span data-l="tr">Kural</span></th></tr></thead>
+        <tbody>
+          <tr><td>TC Kimlik No</td><td>11 <span data-l="en">digits</span><span data-l="tr">hane</span></td><td><span data-l="en">10th and 11th digit checksums</span><span data-l="tr">10. ve 11. hane sağlaması</span></td></tr>
+          <tr><td>Yabancı Kimlik No</td><td>11 <span data-l="en">digits</span><span data-l="tr">hane</span>, 99…</td><td><span data-l="en">same checksum, starts with 99</span><span data-l="tr">aynı sağlama, 99 ile başlar</span></td></tr>
+          <tr><td>Vergi Kimlik No</td><td>10 <span data-l="en">digits</span><span data-l="tr">hane</span></td><td><span data-l="en">official check digit</span><span data-l="tr">resmi kontrol hanesi</span></td></tr>
+          <tr><td>MERSİS No</td><td>16 <span data-l="en">digits</span><span data-l="tr">hane</span></td><td>0 + VKN + 5</td></tr>
+          <tr><td>IBAN</td><td>TR + 24 = 26</td><td><span data-l="en">mod 97, real bank code, reserved 0</span><span data-l="tr">mod 97, gerçek banka kodu, rezerv 0</span></td></tr>
+          <tr><td>SGK İşyeri Sicili</td><td>26 <span data-l="en">digits</span><span data-l="tr">hane</span></td><td><span data-l="en">sector code from NACE, city code of the workplace</span><span data-l="tr">işkolu NACE'den, il kodu işyerinden</span></td></tr>
+          <tr><td>Cep telefonu</td><td>05xx xxx xx xx</td><td><span data-l="en">real operator prefixes</span><span data-l="tr">gerçek operatör önekleri</span></td></tr>
+          <tr><td>Sabit hat</td><td>0xxx xxx xx xx</td><td><span data-l="en">area code of the person's city, all 81 cities</span><span data-l="tr">kişinin ilinin alan kodu, 81 il</span></td></tr>
+          <tr><td>Posta kodu, plaka</td><td>5 <span data-l="en">digits</span><span data-l="tr">hane</span> · 34 ABC 123</td><td><span data-l="en">start with the city code; legal plate letters</span><span data-l="tr">il koduyla başlar; geçerli plaka harfleri</span></td></tr>
+          <tr><td>Brüt ücret</td><td>35.000,00</td><td><span data-l="en">at least the 2026 gross minimum wage (33.030,00)</span><span data-l="tr">en az 2026 brüt asgari ücret (33.030,00)</span></td></tr>
+          <tr><td>Kart no</td><td>16 <span data-l="en">digits</span><span data-l="tr">hane</span></td><td>Luhn</td></tr>
+          <tr><td><span data-l="en">Dates</span><span data-l="tr">Tarihler</span></td><td><span data-l="en">the field's format</span><span data-l="tr">alanın biçimi</span></td><td><span data-l="en">hired after 18, left after hiring and before today, leave end after start</span><span data-l="tr">18 yaşından sonra işe giriş, çıkış girişten sonra ve bugünden önce, izin bitişi başlangıçtan sonra</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note" data-l="en">Numbers are generated, not real. District postal codes are representative.</p>
+    <p class="note" data-l="tr">Numaralar üretilir, gerçek değildir. İlçe posta kodları temsilidir.</p>
+  </div>
+</section>
+
+<section id="bulk">
+  <div class="wrap split flip">
+    <div>
+      <h2 data-l="en">A hundred people in a spreadsheet.</h2>
+      <h2 data-l="tr">Yüz kişi, tek tabloda.</h2>
+      <p class="intro" data-l="en">For bulk import screens: generate any number of people as CSV or XLSX, with the columns you choose, in the order you choose.</p>
+      <p class="intro" data-l="tr">Toplu aktarım ekranları için: istediğiniz sayıda kişiyi, seçtiğiniz kolonlarla ve sırayla CSV ya da XLSX olarak üretin.</p>
+      <ul class="list">
+        <li><h3 data-l="en">Opens in Excel</h3><h3 data-l="tr">Excel'de açılır</h3><p data-l="en">CSV is UTF-8 with a BOM and semicolons, so Turkish Excel reads it correctly. XLSX is a real workbook.</p><p data-l="tr">CSV, BOM'lu UTF-8 ve noktalı virgüllüdür; Türkçe Excel doğru okur. XLSX gerçek bir çalışma kitabıdır.</p></li>
+        <li><h3 data-l="en">Saved templates</h3><h3 data-l="tr">Kayıtlı şablonlar</h3><p data-l="en">Save a column layout once and use it for every import.</p><p data-l="tr">Kolon düzenini bir kez kaydedin, her aktarımda kullanın.</p></li>
+      </ul>
+    </div>
+    <picture>
+      <source srcset="./site/img/popup-bulk-dark.png" media="(prefers-color-scheme: dark)">
+      <img class="shot narrow" src="./site/img/popup-bulk.png" width="400" height="596" alt="Bulk tab: number of people, CSV or XLSX, template and a column list with checkboxes and arrows">
+    </picture>
+  </div>
+</section>
+
+<section id="privacy">
+  <div class="wrap">
+    <h2 data-l="en">Nothing leaves your browser.</h2>
+    <h2 data-l="tr">Tarayıcınızdan hiçbir şey çıkmaz.</h2>
+    <div class="facts">
+      <div><h3 data-l="en">No server</h3><h3 data-l="tr">Sunucu yok</h3><p data-l="en">No backend, no analytics, no account. All data is generated on your computer.</p><p data-l="tr">Arka uç, analitik ve hesap yok. Tüm veriler bilgisayarınızda üretilir.</p></div>
+      <div><h3 data-l="en">Only when you ask</h3><h3 data-l="tr">Yalnız siz isteyince</h3><p data-l="en">The page is touched only when you click Fill, use a shortcut or the right-click menu.</p><p data-l="tr">Sayfaya yalnızca Doldur'a bastığınızda, kısayolu ya da sağ tık menüsünü kullandığınızda dokunulur.</p></div>
+      <div><h3 data-l="en">No site access by default</h3><h3 data-l="tr">Varsayılan site erişimi yok</h3><p data-l="en">Data Helper asks for no host permissions. It works on the tab you are using, through activeTab.</p><p data-l="tr">Data Helper hiçbir site izni istemez. activeTab ile yalnızca kullandığınız sekmede çalışır.</p></div>
+    </div>
+    <div class="table">
+      <table>
+        <thead><tr><th><span data-l="en">Permission</span><span data-l="tr">İzin</span></th><th><span data-l="en">Why it is needed</span><span data-l="tr">Neden gerekli</span></th></tr></thead>
+        <tbody>
+          <tr><td>activeTab, scripting</td><td><span data-l="en">Fill the form in the tab you are using, when you ask.</span><span data-l="tr">İstediğinizde, kullandığınız sekmedeki formu doldurmak.</span></td></tr>
+          <tr><td>contextMenus</td><td><span data-l="en">The right-click menu.</span><span data-l="tr">Sağ tık menüsü.</span></td></tr>
+          <tr><td>storage</td><td><span data-l="en">Favourites, settings, the locked person and column templates, on your computer.</span><span data-l="tr">Favoriler, ayarlar, kilitli kişi ve kolon şablonları; bilgisayarınızda.</span></td></tr>
+          <tr><td>sidePanel</td><td><span data-l="en">The same interface in Chrome's side panel.</span><span data-l="tr">Aynı arayüz Chrome'un yan panelinde.</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap">
+    <div class="install">
+      <div>
+        <h2 data-l="en">Install Data Helper</h2>
+        <h2 data-l="tr">Data Helper'ı kurun</h2>
+        <p data-l="en">Free on the Chrome Web Store. Works in Chrome, Edge, Brave and other Chromium browsers.</p>
+        <p data-l="tr">Chrome Web Mağazası'nda ücretsiz. Chrome, Edge, Brave ve diğer Chromium tarayıcılarında çalışır.</p>
+      </div>
+      <a class="btn primary" href="https://chromewebstore.google.com/detail/hboimhjgdphpokonjindjhgoihkmboli"><span data-l="en">Add to Chrome</span><span data-l="tr">Chrome'a ekle</span></a>
+    </div>
+  </div>
+</section>
+
+<section id="family" class="family">
+  <div class="wrap">
+    <div class="eyebrow"><span data-l="en">More from the same developer</span><span data-l="tr">Aynı geliştiriciden</span></div>
+    <div class="family-grid">
+      <article class="fam">
+        <img src="./site/family/storageninja.png" alt="" width="48" height="48">
+        <div>
+          <h3>StorageNinja</h3>
+          <p data-l="en">Copy the access token, storage and cookies of any page in one click. Snapshots, paste between environments, DevTools panel.</p>
+          <p data-l="tr">Her sayfanın access token'ını, storage'ını ve çerezlerini tek tıkla kopyalayın. Anlık görüntüler, ortamlar arası yapıştırma, DevTools paneli.</p>
+        </div>
+        <div class="links">
+          <a href="https://chromewebstore.google.com/detail/storageninja/kenpefhgbcjkofomcfajmhmilhkfdedp">Chrome Web Store</a>
+          <a href="https://osmnnl.github.io/StorageNinja/"><span data-l="en">Website</span><span data-l="tr">Web sitesi</span></a>
+        </div>
+      </article>
+      <article class="fam">
+        <img src="./site/family/hindsight.png" alt="" width="48" height="48">
+        <div>
+          <h3>Hindsight</h3>
+          <p data-l="en">Records network requests, console errors and clicks in the background, so a bug report has everything when something breaks.</p>
+          <p data-l="tr">Ağ isteklerini, konsol hatalarını ve tıklamaları arka planda kaydeder; bir şey bozulduğunda hata raporunda her şey hazırdır.</p>
+        </div>
+        <div class="links">
+          <a href="https://chromewebstore.google.com/detail/hindsight/gmbaaeehmboadpgiekadalnnecjckelp">Chrome Web Store</a>
+          <a href="https://osmnnl.github.io/hindsight/"><span data-l="en">Website</span><span data-l="tr">Web sitesi</span></a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Data Helper <span data-l="en">by</span><span data-l="tr">·</span> <a href="https://github.com/osmnnl">osmnnl</a> · osmnnldev@gmail.com</span>
+    <nav aria-label="Footer">
+      <a href="https://github.com/osmnnl/TestDataHelper/blob/main/PRIVACY.md"><span data-l="en">Privacy policy</span><span data-l="tr">Gizlilik politikası</span></a>
+      <a href="https://github.com/osmnnl/TestDataHelper">GitHub</a>
+      <a href="https://github.com/osmnnl/TestDataHelper/issues"><span data-l="en">Report an issue</span><span data-l="tr">Sorun bildir</span></a>
+      <a href="https://osmnnl.github.io/StorageNinja/">StorageNinja</a>
+      <a href="https://osmnnl.github.io/hindsight/">Hindsight</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
 </html>

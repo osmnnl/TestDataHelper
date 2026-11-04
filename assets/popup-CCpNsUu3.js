@@ -1,1 +1,0 @@
-import{c as r,j as t,r as o}from"./index-H47kr0qp.js";import{P as e}from"./Popup-BHwVyglJ.js";import"./favorites-C5cupjgA.js";import"./regex-88hVFiPJ.js";r.createRoot(document.getElementById("root")).render(t.jsx(o.StrictMode,{children:t.jsx(e,{})}));
