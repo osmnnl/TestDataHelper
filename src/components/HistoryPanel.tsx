@@ -4,7 +4,7 @@ import {
   clearHistory,
   type HistoryEntry,
 } from "../storage/history";
-import "./HistoryPanel.css";
+import { Icon } from "../app/Icon";
 
 interface HistoryPanelProps {
   onCopy: (value: string) => void;
@@ -54,50 +54,45 @@ export function HistoryPanel({ onCopy }: HistoryPanelProps) {
     };
   }, []);
 
-  if (loading) {
-    return <div className="history-empty">Yükleniyor…</div>;
-  }
-
-  if (entries.length === 0) {
-    return (
-      <div className="history-empty">
-        <span className="history-empty-icon">📜</span>
-        <p>Henüz geçmiş yok</p>
-        <span className="history-empty-hint">
-          Sağ-tık menüsünden veya popup'tan veri ürettikçe burada birikir.
-          Tarayıcıyı kapatınca silinir.
-        </span>
-      </div>
-    );
-  }
+  if (loading) return null;
 
   return (
-    <div className="history-panel">
-      <div className="history-header">
-        <span>Son {entries.length} üretim</span>
-        <button
-          type="button"
-          onClick={async () => {
-            await clearHistory();
-            setEntries([]);
-          }}
-        >
-          Temizle
-        </button>
+    <section className="gen" aria-label="Son kopyalananlar">
+      <div className="gen-row">
+        <span className="section-label">Son kopyalananlar</span>
+        {entries.length > 0 && (
+          <button
+            type="button"
+            className="btn btn-sm btn-ghost"
+            onClick={async () => {
+              await clearHistory();
+              setEntries([]);
+            }}
+          >
+            Temizle
+          </button>
+        )}
       </div>
-      {entries.map((entry, idx) => (
-        <button
-          key={`${entry.ts}-${idx}`}
-          type="button"
-          className="history-row"
-          onClick={() => onCopy(entry.value)}
-          title="Tıklayıp kopyala"
-        >
-          <span className="history-label">{entry.label}</span>
-          <span className="history-value">{entry.value}</span>
-          <span className="history-ts">{formatTime(entry.ts)}</span>
-        </button>
-      ))}
-    </div>
+      {entries.length === 0 ? (
+        <span className="hint">Kopyaladığın değerler burada birikir; tarayıcı kapanınca silinir.</span>
+      ) : (
+        <ul className="rows rows--flush">
+          {entries.map((entry, idx) => (
+            <li key={`${entry.ts}-${idx}`} className="row">
+              <button type="button" className="row-main" title="Tıkla, kopyala" onClick={() => onCopy(entry.value)}>
+                <span className="row-label">
+                  {entry.label}
+                  <span className="row-tab">{formatTime(entry.ts)}</span>
+                </span>
+                <span className="row-value">{entry.value}</span>
+              </button>
+              <button type="button" className="icon-btn copy-btn" aria-label={`${entry.label} kopyala`} onClick={() => onCopy(entry.value)}>
+                <Icon name="copy" />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   );
 }

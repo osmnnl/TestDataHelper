@@ -2,179 +2,110 @@ import { useState } from "react";
 import type { GeneratorOptions } from "../types";
 import { DEFAULT_TEXT_OPTIONS } from "../types";
 import { generateText, generateFromPattern } from "../generators";
-import "./TextGenerator.css";
+import { Icon } from "../app/Icon";
 
 interface TextGeneratorProps {
   onCopy: (text: string) => void;
 }
 
+const CASES: ReadonlyArray<{ id: NonNullable<GeneratorOptions["caseType"]>; label: string }> = [
+  { id: "mixed", label: "Karışık" },
+  { id: "upper", label: "BÜYÜK" },
+  { id: "lower", label: "küçük" },
+];
+
+function runPattern(pattern: string): { out: string; error: string | null } {
+  try {
+    return { out: generateFromPattern(pattern), error: null };
+  } catch (e) {
+    return { out: "", error: e instanceof Error ? e.message : "Geçersiz kalıp" };
+  }
+}
+
 export function TextGenerator({ onCopy }: TextGeneratorProps) {
-  const [options, setOptions] =
-    useState<GeneratorOptions>(DEFAULT_TEXT_OPTIONS);
-  const [generatedText, setGeneratedText] = useState<string>("");
-  const [pattern, setPattern] = useState<string>("[A-Z]{3}-\\d{5}");
-  const [patternOutput, setPatternOutput] = useState<string>("");
-  const [patternError, setPatternError] = useState<string | null>(null);
+  const [options, setOptions] = useState<GeneratorOptions>(DEFAULT_TEXT_OPTIONS);
+  const [text, setText] = useState(() => generateText(DEFAULT_TEXT_OPTIONS));
+  const [pattern, setPattern] = useState("[A-Z]{3}-\\d{5}");
+  const [patternResult, setPatternResult] = useState(() => runPattern("[A-Z]{3}-\\d{5}"));
 
-  const handlePatternGenerate = () => {
-    try {
-      const out = generateFromPattern(pattern);
-      setPatternOutput(out);
-      setPatternError(null);
-    } catch (e) {
-      setPatternError(e instanceof Error ? e.message : "Geçersiz pattern");
-      setPatternOutput("");
-    }
+  // Seçenek değişince metin hemen yeniden üretilir; ayrı "Üret" adımı yok
+  const update = (patch: Partial<GeneratorOptions>) => {
+    const next = { ...options, ...patch };
+    setOptions(next);
+    setText(generateText(next));
   };
 
-  const handleGenerate = () => {
-    const text = generateText(options);
-    setGeneratedText(text);
-  };
-
-  const handleCopy = () => {
-    if (generatedText) {
-      onCopy(generatedText);
-    }
-  };
-
-  const handleLengthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Math.min(2000, Math.max(1, parseInt(e.target.value) || 1));
-    setOptions((prev) => ({ ...prev, length: value }));
+  const changePattern = (value: string) => {
+    setPattern(value);
+    setPatternResult(runPattern(value));
   };
 
   return (
-    <div className="text-generator">
-      <div className="text-generator-header">
-        <span className="text-generator-title">📝 Metin Üretici</span>
-      </div>
-
-      <div className="text-generator-options">
-        <div className="option-row">
-          <label className="option-label">Karakter Sayısı</label>
-          <input
-            type="number"
-            className="option-input"
-            value={options.length}
-            onChange={handleLengthChange}
-            min={1}
-            max={2000}
-          />
-        </div>
-
-        <div className="option-row">
-          <label className="option-checkbox">
+    <>
+      <section className="gen" aria-label="Metin üretici">
+        <span className="section-label">Metin</span>
+        <div className="gen-row">
+          <label className="gen-row" style={{ gap: 8 }}>
+            Uzunluk
             <input
-              type="checkbox"
-              checked={options.includeNumbers}
-              onChange={(e) =>
-                setOptions((prev) => ({
-                  ...prev,
-                  includeNumbers: e.target.checked,
-                }))
-              }
+              type="number"
+              className="input input--num"
+              value={options.length}
+              min={1}
+              max={2000}
+              onChange={(e) => update({ length: Math.min(2000, Math.max(1, parseInt(e.target.value) || 1)) })}
             />
-            <span>Sayı dahil et</span>
+          </label>
+          <div className="seg" role="group" aria-label="Harf tipi">
+            {CASES.map((c) => (
+              <button key={c.id} type="button" className={options.caseType === c.id ? "is-on" : ""} aria-pressed={options.caseType === c.id} onClick={() => update({ caseType: c.id })}>
+                {c.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="gen-checks">
+          <label>
+            <input type="checkbox" checked={!!options.includeNumbers} onChange={(e) => update({ includeNumbers: e.target.checked })} />
+            Sayı
+          </label>
+          <label>
+            <input type="checkbox" checked={!!options.includeSpecialChars} onChange={(e) => update({ includeSpecialChars: e.target.checked })} />
+            Özel karakter
           </label>
         </div>
+        <div className="output">
+          <span className="output-text">{text}</span>
+          <button type="button" className="icon-btn" aria-label="Yeniden üret" title="Yeniden üret" onClick={() => setText(generateText(options))}>
+            <Icon name="refresh" />
+          </button>
+          <button type="button" className="icon-btn" aria-label="Metni kopyala" title="Kopyala" onClick={() => onCopy(text)}>
+            <Icon name="copy" />
+          </button>
+        </div>
+      </section>
 
-        <div className="option-row">
-          <label className="option-checkbox">
-            <input
-              type="checkbox"
-              checked={options.includeSpecialChars}
-              onChange={(e) =>
-                setOptions((prev) => ({
-                  ...prev,
-                  includeSpecialChars: e.target.checked,
-                }))
-              }
-            />
-            <span>Özel karakter dahil et</span>
-          </label>
+      <section className="gen" aria-label="Kalıptan üret">
+        <span className="section-label">Kalıp</span>
+        <input
+          type="text"
+          className="input input--mono"
+          value={pattern}
+          onChange={(e) => changePattern(e.target.value)}
+          spellCheck={false}
+          aria-label="Kalıp"
+        />
+        <div className="output">
+          <span className={`output-text${patternResult.error ? " is-error" : ""}`}>{patternResult.error ?? patternResult.out}</span>
+          <button type="button" className="icon-btn" aria-label="Yeniden üret" title="Yeniden üret" onClick={() => setPatternResult(runPattern(pattern))}>
+            <Icon name="refresh" />
+          </button>
+          <button type="button" className="icon-btn" aria-label="Sonucu kopyala" title="Kopyala" disabled={!patternResult.out} onClick={() => onCopy(patternResult.out)}>
+            <Icon name="copy" />
+          </button>
         </div>
-
-        <div className="option-row">
-          <label className="option-label">Harf Tipi</label>
-          <select
-            className="option-select"
-            value={options.caseType}
-            onChange={(e) =>
-              setOptions((prev) => ({
-                ...prev,
-                caseType: e.target.value as "mixed" | "upper" | "lower",
-              }))
-            }
-          >
-            <option value="mixed">Karışık</option>
-            <option value="upper">Büyük Harf</option>
-            <option value="lower">Küçük Harf</option>
-          </select>
-        </div>
-      </div>
-
-      <div className="text-generator-actions">
-        <button className="generate-btn" onClick={handleGenerate}>
-          Üret
-        </button>
-        <button
-          className="copy-text-btn"
-          onClick={handleCopy}
-          disabled={!generatedText}
-        >
-          📋 Kopyala
-        </button>
-      </div>
-
-      {generatedText && (
-        <div className="generated-text">
-          <span className="generated-label">Üretilen Metin:</span>
-          <div className="generated-content">{generatedText}</div>
-        </div>
-      )}
-
-      <div className="text-generator-header" style={{ marginTop: 12 }}>
-        <span className="text-generator-title">🧩 Özel Pattern</span>
-      </div>
-      <div className="text-generator-options">
-        <div className="option-row">
-          <label className="option-label">
-            Pattern (ör. [A-Z]&#123;3&#125;-\d&#123;5&#125;)
-          </label>
-          <input
-            type="text"
-            className="option-input"
-            value={pattern}
-            onChange={(e) => setPattern(e.target.value)}
-            spellCheck={false}
-          />
-        </div>
-      </div>
-      <div className="text-generator-actions">
-        <button className="generate-btn" onClick={handlePatternGenerate}>
-          Üret
-        </button>
-        <button
-          className="copy-text-btn"
-          onClick={() => patternOutput && onCopy(patternOutput)}
-          disabled={!patternOutput}
-        >
-          📋 Kopyala
-        </button>
-      </div>
-      {patternError && (
-        <div className="generated-text">
-          <span className="generated-label" style={{ color: "#dc2626" }}>
-            Hata: {patternError}
-          </span>
-        </div>
-      )}
-      {patternOutput && (
-        <div className="generated-text">
-          <span className="generated-label">Üretilen:</span>
-          <div className="generated-content">{patternOutput}</div>
-        </div>
-      )}
-    </div>
+        <span className="hint">[A-Z] harf, \d rakam, {"{3}"} tekrar. Örnek: [A-Z]{"{2}"}\d{"{4}"} → KT4821</span>
+      </section>
+    </>
   );
 }

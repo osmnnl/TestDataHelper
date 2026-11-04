@@ -11,9 +11,10 @@ import { BulkPanel } from "./BulkPanel";
 import { Icon } from "./Icon";
 import "./App.css";
 
-type PopupTab = "person" | "company" | "finance" | "address" | "text" | "bulk";
+type PopupTab = "favorites" | "person" | "company" | "finance" | "address" | "text" | "bulk";
 
 const POPUP_TABS: ReadonlyArray<{ id: PopupTab; label: string; from: TabId[] }> = [
+  { id: "favorites", label: "Favoriler", from: [] },
   { id: "person", label: "Kişi", from: ["person", "date"] },
   { id: "company", label: "Şirket", from: ["company"] },
   { id: "finance", label: "Finans", from: ["finance"] },
@@ -21,6 +22,8 @@ const POPUP_TABS: ReadonlyArray<{ id: PopupTab; label: string; from: TabId[] }> 
   { id: "text", label: "Metin", from: [] },
   { id: "bulk", label: "Toplu", from: [] },
 ];
+
+const TAB_LABEL: Record<TabId, string> = { person: "Kişi", date: "Kişi", company: "Şirket", finance: "Finans", address: "Adres", text: "Metin" };
 
 const IS_MAC = navigator.userAgent.includes("Mac");
 const FORM_KEY = IS_MAC ? "⌘⇧F" : "Ctrl+Shift+F";
@@ -47,7 +50,8 @@ function displayDate(iso: string) {
 
 export function App({ variant }: { variant: "popup" | "panel" }) {
   const [state, setState] = useState<HelperState | null>(null);
-  const [tab, setTab] = useState<PopupTab>("person");
+  // Kullanıcı sekme seçene kadar: favori varsa Favoriler, yoksa Kişi
+  const [chosenTab, setTab] = useState<PopupTab | null>(null);
   const [tabId, setTabId] = useState<number | null>(null);
   const [windowId, setWindowId] = useState<number | null>(null);
   const [lastFill, setLastFill] = useState<LastFill>(null);
@@ -56,7 +60,8 @@ export function App({ variant }: { variant: "popup" | "panel" }) {
   const [busy, setBusy] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const { isFavorite, toggleFavorite } = useFavorites();
+  const { favorites, loading: favLoading, isFavorite, toggleFavorite } = useFavorites();
+  const tab: PopupTab = chosenTab ?? (!favLoading && favorites.length > 0 ? "favorites" : "person");
 
   const refreshTab = useCallback(async () => {
     const [t] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -151,14 +156,19 @@ export function App({ variant }: { variant: "popup" | "panel" }) {
   const q = fold(query.trim());
   const rows = useMemo(() => {
     if (!state) return [];
-    const from = POPUP_TABS.find((t) => t.id === tab)?.from ?? [];
     // Arama yazılınca tüm sekmelerde ad ve değere göre süzülür
-    const items = q
-      ? CATALOG.filter((c) => c.tab !== "text" && fold(`${c.label} ${c.get(state)}`).includes(q))
-      : CATALOG.filter((c) => from.includes(c.tab));
+    if (q) return CATALOG.filter((c) => c.tab !== "text" && fold(`${c.label} ${c.get(state)}`).includes(q));
+    if (tab === "favorites") {
+      return [...favorites]
+        .sort((a, b) => a.order - b.order)
+        .flatMap((f) => CATALOG.filter((c) => c.id === f.id && c.tab !== "text"));
+    }
+    const from = POPUP_TABS.find((t) => t.id === tab)?.from ?? [];
+    const items = CATALOG.filter((c) => from.includes(c.tab));
     // Favoriler sekmenin başında
     return [...items.filter((i) => isFavorite(i.id)), ...items.filter((i) => !isFavorite(i.id))];
-  }, [state, tab, q, isFavorite]);
+  }, [state, tab, q, favorites, isFavorite]);
+  const mixed = !!q || tab === "favorites";
 
   if (!state) return <div className={`app app--${variant}`} />;
   const p = state.persona;
@@ -196,20 +206,19 @@ export function App({ variant }: { variant: "popup" | "panel" }) {
           </div>
         )}
         <div className="persona" aria-label="Geçerli kişi">
-          <div className="persona-head">
+          <div className="persona-text">
             <span className="persona-name">{p.fullName}</span>
-            <span className="persona-actions">
-              <button className="btn btn-sm" onClick={() => void regenerate("persona")} disabled={state.locked} title={state.locked ? "Kilitliyken yenilenmez" : "Yeni kişi"}>Yenile</button>
-              <button className={`btn btn-sm${state.locked ? " is-on" : ""}`} aria-pressed={state.locked} onClick={() => void toggleLock()}>
-                {state.locked ? "Kilitli" : "Kilitle"}
-              </button>
-            </span>
+            <span className="persona-meta">{p.gender === "female" ? "Kadın" : "Erkek"} · {p.birthDate} · {p.city} / {p.district} {p.postalCode}</span>
+            <span className="persona-meta">Anne {p.motherName} · Baba {p.fatherName} · İşe giriş {displayDate(p.dates.hire)}</span>
           </div>
-          <div className="persona-meta">
-            {p.gender === "female" ? "Kadın" : "Erkek"} · {p.birthDate} · {p.city} / {p.district} {p.postalCode} · {p.plateCode} plaka
-            <br />
-            Anne {p.motherName} · Baba {p.fatherName} · İşe giriş {displayDate(p.dates.hire)}
-          </div>
+          <span className="persona-actions">
+            <button className="icon-btn" onClick={() => void regenerate("persona")} disabled={state.locked} aria-label="Yeni kişi" title={state.locked ? "Kilitliyken yenilenmez" : "Yeni kişi"}>
+              <Icon name="refresh" />
+            </button>
+            <button className={`icon-btn${state.locked ? " is-on" : ""}`} aria-pressed={state.locked} aria-label="Kişiyi kilitle" title={state.locked ? "Kilitli: doldurunca aynı kişi kalır" : "Kilitle: doldurunca aynı kişi kalsın"} onClick={() => void toggleLock()}>
+              <Icon name={state.locked ? "lock" : "unlock"} />
+            </button>
+          </span>
         </div>
       </section>
 
@@ -226,8 +235,15 @@ export function App({ variant }: { variant: "popup" | "panel" }) {
 
       <nav className="tabs" role="tablist" aria-label="Veri grupları" hidden={!!q}>
         {POPUP_TABS.map((t) => (
-          <button key={t.id} role="tab" aria-selected={tab === t.id} className={`tab${tab === t.id ? " is-active" : ""}`} onClick={() => setTab(t.id)}>
-            {t.label}
+          <button key={t.id} role="tab" aria-selected={tab === t.id} aria-label={t.label} title={t.id === "favorites" ? "Favoriler" : undefined} className={`tab${t.id === "favorites" ? " tab--fav" : ""}${tab === t.id ? " is-active" : ""}`} onClick={() => setTab(t.id)}>
+            {t.id === "favorites" ? (
+              <>
+                <Icon name="star" filled={tab === t.id} size={15} />
+                {favorites.length > 0 && <span className="tab-count">{favorites.length}</span>}
+              </>
+            ) : (
+              t.label
+            )}
           </button>
         ))}
       </nav>
@@ -257,14 +273,17 @@ export function App({ variant }: { variant: "popup" | "panel" }) {
                 return (
                   <li key={item.id} className="row">
                     <button type="button" className="row-main" title={`${shown} — tıkla, kopyala`} onClick={() => void copy(item.label, value)}>
-                      <span className="row-label">{item.label}</span>
+                      <span className="row-label">
+                        {item.label}
+                        {mixed && <span className="row-tab">{TAB_LABEL[item.tab]}</span>}
+                      </span>
                       <span className="row-value">{shown}</span>
                     </button>
                     {check && <span className="row-check">{check}</span>}
-                    <button className={`icon-btn icon-btn--sm${fav ? " is-fav" : ""}`} aria-label={fav ? "Favorilerden çıkar" : "Favorilere ekle"} aria-pressed={fav} onClick={() => void toggleFavorite(item.id)}>
+                    <button className={`icon-btn fav-btn${fav ? " is-fav" : ""}`} aria-label={fav ? "Favorilerden çıkar" : "Favorilere ekle"} aria-pressed={fav} onClick={() => void toggleFavorite(item.id)}>
                       <Icon name="star" filled={fav} />
                     </button>
-                    <button className="icon-btn icon-btn--box" aria-label={`${item.label} kopyala`} onClick={() => void copy(item.label, value)}>
+                    <button className="icon-btn copy-btn" aria-label={`${item.label} kopyala`} onClick={() => void copy(item.label, value)}>
                       <Icon name="copy" />
                     </button>
                   </li>
@@ -272,6 +291,12 @@ export function App({ variant }: { variant: "popup" | "panel" }) {
               })}
             </ul>
             {q && rows.length === 0 && <p className="empty">“{query}” için sonuç yok</p>}
+            {!q && tab === "favorites" && rows.length === 0 && (
+              <p className="empty">
+                <strong>Henüz favori yok</strong>
+                Sık kullandığın satırın üzerine gel, yıldıza bas; burada toplanır.
+              </p>
+            )}
           </>
         )}
       </main>
@@ -283,7 +308,7 @@ export function App({ variant }: { variant: "popup" | "panel" }) {
               ? `Son doldurma: ${lastFill.filled} alan${lastFill.skipped ? ` · ${lastFill.skipped} atlandı` : ""}${lastFill.mismatches.length ? ` · ${lastFill.mismatches.length} tutmadı` : ""}`
               : "Bu sekmede henüz doldurma yok")}
         </span>
-        <button className="btn btn-sm" onClick={() => void run("undo")} disabled={!lastFill}>Geri al</button>
+        <button className="btn btn-sm btn-ghost" onClick={() => void run("undo")} disabled={!lastFill}>Geri al</button>
       </footer>
 
       <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} onChange={() => void send<HelperState>({ type: "dh:state" }).then(setState)} />

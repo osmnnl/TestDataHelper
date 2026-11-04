@@ -8,9 +8,16 @@ import {
 import { clearHistory } from "../storage/history";
 import { decodePersona } from "../storage/share";
 import { SnapshotSection } from "./SnapshotSection";
+import { applyTheme, type ThemePref } from "../shared/theme";
 import "./SettingsModal.css";
 
 const PERSONA_KEY = "dh.persona";
+
+const THEMES: ReadonlyArray<{ id: ThemePref; label: string }> = [
+  { id: "light", label: "Açık" },
+  { id: "dark", label: "Koyu" },
+  { id: "auto", label: "Sistem" },
+];
 
 interface SettingsModalProps {
   open: boolean;
@@ -23,12 +30,15 @@ export function SettingsModal({ open, onClose, onChange }: SettingsModalProps) {
   const [status, setStatus] = useState<string | null>(null);
   const [blocked, setBlocked] = useState("");
   const [personaCode, setPersonaCode] = useState("");
+  const [theme, setTheme] = useState<ThemePref>("light");
 
   useEffect(() => {
     if (!open) return;
     let cancelled = false;
     void getSettings().then((s) => {
-      if (!cancelled) setBlocked((s.blockedDomains ?? []).join("\n"));
+      if (cancelled) return;
+      setBlocked((s.blockedDomains ?? []).join("\n"));
+      setTheme(s.theme ?? "light");
     });
     return () => {
       cancelled = true;
@@ -47,6 +57,12 @@ export function SettingsModal({ open, onClose, onChange }: SettingsModalProps) {
     } catch (e) {
       setStatus(e instanceof Error ? `✕ ${e.message}` : "✕ Geçersiz kod");
     }
+  };
+
+  const chooseTheme = async (next: ThemePref) => {
+    setTheme(next);
+    applyTheme(next);
+    await setSettings({ theme: next });
   };
 
   const saveBlocked = async () => {
@@ -111,14 +127,25 @@ export function SettingsModal({ open, onClose, onChange }: SettingsModalProps) {
         </div>
 
         <section className="settings-section">
+          <h3>Görünüm</h3>
+          <div className="seg" role="group" aria-label="Tema">
+            {THEMES.map((t) => (
+              <button key={t.id} type="button" className={theme === t.id ? "is-on" : ""} aria-pressed={theme === t.id} onClick={() => void chooseTheme(t.id)}>
+                {t.label}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section className="settings-section">
           <h3>Yedekleme</h3>
           <p>Favoriler ve ayarlarınızı JSON olarak dışa/içe aktarın.</p>
           <div className="settings-actions">
             <button type="button" onClick={handleExport}>
-              ⬇ Dışa Aktar
+              Dışa aktar
             </button>
             <button type="button" onClick={() => fileRef.current?.click()}>
-              ⬆ İçe Aktar
+              İçe aktar
             </button>
             <input
               ref={fileRef}
@@ -154,7 +181,7 @@ export function SettingsModal({ open, onClose, onChange }: SettingsModalProps) {
               onClick={importPersonaCode}
               disabled={!personaCode.trim()}
             >
-              ⬆ Yükle
+              Yükle
             </button>
           </div>
         </section>
@@ -176,7 +203,7 @@ export function SettingsModal({ open, onClose, onChange }: SettingsModalProps) {
           />
           <div className="settings-actions">
             <button type="button" onClick={saveBlocked}>
-              💾 Kaydet
+              Kaydet
             </button>
           </div>
         </section>

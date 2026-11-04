@@ -8,6 +8,9 @@ const PATHS: Record<string, string> = {
   up: "M12 19V5 M5 12l7-7 7 7",
   search: "M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z M20 20l-4-4",
   down: "M12 5v14 M19 12l-7 7-7-7",
+  refresh: "M20 11a8 8 0 0 0-14.6-4.5L4 8 M4 4v4h4 M4 13a8 8 0 0 0 14.6 4.5L20 16 M20 20v-4h-4",
+  lock: "M6 11h12v9H6z M8.5 11V8a3.5 3.5 0 0 1 7 0v3",
+  unlock: "M6 11h12v9H6z M8.5 11V8a3.5 3.5 0 0 1 6.8-1.2",
 };
 
 export function Icon({ name, filled = false, size = 16 }: { name: keyof typeof PATHS | string; filled?: boolean; size?: number }) {

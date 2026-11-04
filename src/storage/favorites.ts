@@ -122,7 +122,7 @@ export interface Settings {
 
 const DEFAULT_SETTINGS: Settings = {
   textOptions: DEFAULT_TEXT_OPTIONS,
-  theme: "auto",
+  theme: "light",
   blockedDomains: [],
 };
 
