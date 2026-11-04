@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Data Helper",
-  "description": "Türkçe test verisi: geçerli TCKN, VKN, IBAN; tutarlı persona ve şirket; formu tek tıkla doldurma, önizleme, geri alma; toplu CSV / XLSX.",
+  "description": "Türkçe test verisi: geçerli TCKN, VKN, IBAN; tutarlı kişi ve şirket; tek tıkla form doldurma, önizleme, geri alma; toplu CSV/XLSX.",
   "version": "2.0.0",
   "minimum_chrome_version": "114",
   "action": {
